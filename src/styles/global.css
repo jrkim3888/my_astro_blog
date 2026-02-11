@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #0f172a;
+  --color-text-light: #1e293b;
+  --color-text-dark: #e2e8f0;
+  --color-muted-light: #64748b;
+  --color-muted-dark: #94a3b8;
+  --color-border-light: #e2e8f0;
+  --color-border-dark: #1e293b;
+}
+
+body {
+  @apply bg-surface-light text-text-light antialiased transition-colors duration-200;
+  font-family: var(--font-sans);
+}
+
+:where(.dark) body {
+  @apply bg-surface-dark text-text-dark;
+}
+
+/* Prose styling for blog posts */
+.prose {
+  @apply max-w-none leading-relaxed;
+}
+
+.prose h1 {
+  @apply text-3xl font-bold mt-10 mb-4;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mt-8 mb-3 border-b border-border-light pb-2;
+}
+
+:where(.dark) .prose h2 {
+  @apply border-border-dark;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mt-6 mb-2;
+}
+
+.prose p {
+  @apply my-4;
+}
+
+.prose a {
+  @apply text-primary-600 underline underline-offset-2 hover:text-primary-500;
+}
+
+:where(.dark) .prose a {
+  @apply text-primary-400 hover:text-primary-300;
+}
+
+.prose ul {
+  @apply list-disc pl-6 my-4 space-y-1;
+}
+
+.prose ol {
+  @apply list-decimal pl-6 my-4 space-y-1;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-primary-500 pl-4 my-4 italic text-muted-light;
+}
+
+:where(.dark) .prose blockquote {
+  @apply text-muted-dark;
+}
+
+.prose code {
+  @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+:where(.dark) .prose code {
+  @apply bg-gray-800;
+}
+
+.prose pre {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.prose img {
+  @apply rounded-lg my-6;
+}
+
+.prose hr {
+  @apply my-8 border-border-light;
+}
+
+:where(.dark) .prose hr {
+  @apply border-border-dark;
+}

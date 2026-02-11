@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/wrangler",
+  "name": "my-astro-blog",
+  "pages_build_output_dir": "./dist"
+}

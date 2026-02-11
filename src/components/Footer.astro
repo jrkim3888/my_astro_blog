@@ -1,0 +1,29 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border-light dark:border-border-dark">
+  <div class="mx-auto max-w-4xl px-4 py-8">
+    <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <p class="text-sm text-muted-light dark:text-muted-dark">
+        &copy; {year} dev.blog. All rights reserved.
+      </p>
+      <div class="flex gap-4">
+        <a
+          href="/rss.xml"
+          class="text-sm text-muted-light transition-colors hover:text-primary-600 dark:text-muted-dark dark:hover:text-primary-400"
+        >
+          RSS
+        </a>
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-muted-light transition-colors hover:text-primary-600 dark:text-muted-dark dark:hover:text-primary-400"
+        >
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

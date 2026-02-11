@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" rx="12" fill="#0f172a"/>
+  <text x="400" y="180" text-anchor="middle" font-family="system-ui,sans-serif" font-size="32" font-weight="bold" fill="#e2e8f0">Astro Island Architecture</text>
+  <text x="400" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#94a3b8">Static HTML + Interactive Islands</text>
+  <rect x="80" y="280" width="160" height="60" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="160" y="316" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#93c5fd">Static HTML</text>
+  <rect x="320" y="280" width="160" height="60" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="400" y="316" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#c4b5fd">React Island</text>
+  <rect x="560" y="280" width="160" height="60" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="640" y="316" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#6ee7b7">Vue Island</text>
+</svg>

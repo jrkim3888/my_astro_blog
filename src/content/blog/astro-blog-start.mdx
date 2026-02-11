@@ -1,0 +1,53 @@
+---
+title: "Astro로 블로그 시작하기"
+description: "Astro 프레임워크를 사용하여 정적 블로그를 만드는 방법을 알아봅니다. 프로젝트 설정부터 Cloudflare Pages 배포까지 다룹니다."
+pubDate: 2025-01-15
+category: "웹 개발"
+tags: ["Astro", "블로그", "정적 사이트"]
+---
+
+## Astro란?
+
+Astro는 콘텐츠 중심의 웹사이트를 빠르게 만들 수 있는 프레임워크입니다.
+기본적으로 JavaScript를 최소화하여 빠른 로딩 속도를 제공합니다.
+
+![Astro Island Architecture](/images/blog/astro-architecture.svg)
+
+## 왜 Astro인가?
+
+블로그와 같은 콘텐츠 중심 사이트에 Astro가 적합한 이유:
+
+- **제로 JS 기본값**: 필요한 경우에만 JavaScript를 로드합니다
+- **콘텐츠 컬렉션**: Markdown/MDX 파일을 타입 안전하게 관리할 수 있습니다
+- **유연한 통합**: React, Vue, Svelte 등 다양한 UI 프레임워크와 함께 사용 가능합니다
+- **빠른 빌드**: Vite 기반으로 빠른 개발 서버와 빌드를 제공합니다
+
+## 프로젝트 구조
+
+```
+my_astro_blog/
+├── src/
+│   ├── content/blog/    # MDX 블로그 글
+│   ├── components/      # Astro 컴포넌트
+│   ├── layouts/         # 레이아웃
+│   └── pages/           # 페이지 라우팅
+├── public/              # 정적 파일
+└── astro.config.mjs     # 설정 파일
+```
+
+## Tailwind CSS v4
+
+이 블로그는 Tailwind CSS v4를 사용합니다.
+v4에서는 Vite 플러그인으로 통합되어 설정이 더 간단해졌습니다.
+
+```css
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+## Cloudflare Pages 배포
+
+정적 사이트로 빌드된 Astro 프로젝트는 Cloudflare Pages에 쉽게 배포할 수 있습니다.
+GitHub 저장소를 연결하면 푸시할 때마다 자동으로 배포됩니다.
+
+다음 글에서는 Tailwind CSS v4의 새로운 기능에 대해 더 자세히 다루겠습니다.

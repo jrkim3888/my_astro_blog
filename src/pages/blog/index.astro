@@ -1,0 +1,176 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { getSortedPosts } from "../../utils/getSortedPosts";
+
+const allPosts = await getCollection("blog");
+const sortedPosts = getSortedPosts(allPosts);
+
+// 카테고리별 글 수 집계
+const categoryCount = new Map<string, number>();
+for (const post of sortedPosts) {
+  const cat = post.data.category;
+  categoryCount.set(cat, (categoryCount.get(cat) ?? 0) + 1);
+}
+const categories = [...categoryCount.entries()].sort((a, b) => b[1] - a[1]);
+const totalCount = sortedPosts.length;
+---
+
+<BaseLayout title="블로그 | dev.blog" description="개발과 기술에 대한 글 모음">
+  <section class="mx-auto max-w-6xl px-4 py-10">
+    <h1 class="text-3xl font-bold">블로그</h1>
+    <p class="mt-2 text-muted-light dark:text-muted-dark">
+      개발과 기술에 대한 생각을 기록합니다.
+    </p>
+
+    <!-- 모바일 카테고리 토글 버튼 -->
+    <button
+      id="category-toggle"
+      type="button"
+      class="mt-6 flex w-full items-center justify-between rounded-lg border border-border-light px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 dark:border-border-dark dark:hover:bg-gray-800 md:hidden"
+    >
+      <span class="flex items-center gap-2">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        카테고리
+      </span>
+      <svg id="category-chevron" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <!-- 모바일 카테고리 목록 -->
+    <nav id="category-mobile" class="hidden mt-2 rounded-lg border border-border-light p-3 dark:border-border-dark md:hidden">
+      <ul class="flex flex-wrap gap-2">
+        <li>
+          <button
+            data-category="all"
+            class="category-btn inline-flex items-center gap-1.5 rounded-full bg-primary-600 px-3 py-1 text-xs font-medium text-white"
+          >
+            전체 <span class="opacity-80">({totalCount})</span>
+          </button>
+        </li>
+        {categories.map(([cat, count]) => (
+          <li>
+            <button
+              data-category={cat}
+              class="category-btn inline-flex items-center gap-1.5 rounded-full border border-border-light px-3 py-1 text-xs font-medium text-muted-light transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-border-dark dark:text-muted-dark dark:hover:border-primary-400 dark:hover:text-primary-400"
+            >
+              {cat} <span class="opacity-60">({count})</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="mt-8 flex gap-10">
+      <!-- 데스크톱 카테고리 사이드바 -->
+      <aside class="hidden w-48 shrink-0 md:block">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-light dark:text-muted-dark">
+          카테고리
+        </h2>
+        <ul class="mt-3 space-y-1">
+          <li>
+            <button
+              data-category="all"
+              class="category-btn flex w-full items-center justify-between rounded-md bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+            >
+              <span>전체</span>
+              <span class="text-xs opacity-70">{totalCount}</span>
+            </button>
+          </li>
+          {categories.map(([cat, count]) => (
+            <li>
+              <button
+                data-category={cat}
+                class="category-btn flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-muted-light transition-colors hover:bg-gray-50 hover:text-text-light dark:text-muted-dark dark:hover:bg-gray-800 dark:hover:text-text-dark"
+              >
+                <span>{cat}</span>
+                <span class="text-xs opacity-60">{count}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <!-- 블로그 글 목록 -->
+      <div class="min-w-0 flex-1">
+        {sortedPosts.map((post) => (
+          <div data-post-category={post.data.category}>
+            <BlogCard post={post} />
+          </div>
+        ))}
+
+        {sortedPosts.length === 0 && (
+          <p class="mt-8 text-center text-muted-light dark:text-muted-dark">
+            아직 작성된 글이 없습니다.
+          </p>
+        )}
+
+        <p id="no-results" class="hidden mt-8 text-center text-muted-light dark:text-muted-dark">
+          해당 카테고리에 글이 없습니다.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  function initCategoryFilter() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".category-btn");
+    const posts = document.querySelectorAll<HTMLElement>("[data-post-category]");
+    const noResults = document.getElementById("no-results")!;
+    const toggle = document.getElementById("category-toggle")!;
+    const mobileMenu = document.getElementById("category-mobile")!;
+    const chevron = document.getElementById("category-chevron")!;
+
+    // 모바일 토글
+    toggle.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+      chevron.classList.toggle("rotate-180");
+    });
+
+    // 카테고리 필터링
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const selected = btn.dataset.category!;
+
+        // 버튼 활성 상태 업데이트
+        buttons.forEach((b) => {
+          const isActive = b.dataset.category === selected;
+          // 데스크톱 사이드바 버튼
+          if (b.closest("aside")) {
+            if (isActive) {
+              b.className = "category-btn flex w-full items-center justify-between rounded-md bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300";
+            } else {
+              b.className = "category-btn flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm text-muted-light transition-colors hover:bg-gray-50 hover:text-text-light dark:text-muted-dark dark:hover:bg-gray-800 dark:hover:text-text-dark";
+            }
+          }
+          // 모바일 pill 버튼
+          if (b.closest("#category-mobile")) {
+            if (isActive) {
+              b.className = "category-btn inline-flex items-center gap-1.5 rounded-full bg-primary-600 px-3 py-1 text-xs font-medium text-white";
+            } else {
+              b.className = "category-btn inline-flex items-center gap-1.5 rounded-full border border-border-light px-3 py-1 text-xs font-medium text-muted-light transition-colors hover:border-primary-500 hover:text-primary-600 dark:border-border-dark dark:text-muted-dark dark:hover:border-primary-400 dark:hover:text-primary-400";
+            }
+          }
+        });
+
+        // 글 필터링
+        let visible = 0;
+        posts.forEach((post) => {
+          const show = selected === "all" || post.dataset.postCategory === selected;
+          post.style.display = show ? "" : "none";
+          if (show) visible++;
+        });
+
+        noResults.classList.toggle("hidden", visible > 0);
+      });
+    });
+  }
+
+  initCategoryFilter();
+  document.addEventListener("astro:after-swap", initCategoryFilter);
+</script>

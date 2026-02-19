@@ -54,6 +54,15 @@ const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
 
+    <!-- Google Analytics -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-3774MWP867"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3774MWP867');
+    </script>
+
     <!-- Dark mode FOUC prevention -->
     <script is:inline>
       (function () {

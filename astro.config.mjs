@@ -6,7 +6,7 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://my-astro-blog.pages.dev",
+  site: "https://ai-dev-blog.pages.dev",
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

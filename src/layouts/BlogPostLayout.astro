@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import TagPill from "../components/TagPill.astro";
+import Giscus from "../components/Giscus.astro";
 import { formatDate } from "../utils/formatDate";
 import { getReadingTime } from "../utils/readingTime";
 
@@ -19,7 +20,7 @@ const { title, description, pubDate, updatedDate, category, tags, body } =
 const readingTime = getReadingTime(body);
 ---
 
-<BaseLayout title={`${title} | dev.blog`} description={description}>
+<BaseLayout title={`${title} | ai.dev.blog`} description={description}>
   <article class="mx-auto max-w-4xl px-4 py-10">
     <!-- Back link -->
     <a
@@ -74,4 +75,7 @@ const readingTime = getReadingTime(body);
       <slot />
     </div>
   </article>
+
+  <!-- Comments -->
+  <Giscus />
 </BaseLayout>

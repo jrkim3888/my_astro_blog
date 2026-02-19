@@ -8,7 +8,7 @@ export async function GET(context: APIContext) {
   const sortedPosts = getSortedPosts(posts);
 
   return rss({
-    title: "dev.blog",
+    title: "ai.dev.blog",
     description: "개발과 기술에 대한 생각을 기록하는 블로그",
     site: context.site!,
     items: sortedPosts.map((post) => ({

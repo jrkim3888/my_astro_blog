@@ -48,11 +48,7 @@ body {
 }
 
 .prose h2 {
-  @apply text-2xl font-bold mt-8 mb-3 border-b border-border-light pb-2;
-}
-
-:where(.dark) .prose h2 {
-  @apply border-border-dark;
+  @apply text-2xl font-bold mt-8 mb-3;
 }
 
 .prose h3 {

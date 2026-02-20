@@ -10,6 +10,7 @@ const blog = defineCollection({
     updatedDate: z.coerce.date().optional(),
     category: z.string().default("일반"),
     tags: z.array(z.string()).default([]),
+    heroImage: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

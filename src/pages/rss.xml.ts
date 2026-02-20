@@ -2,6 +2,7 @@ import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { getSortedPosts } from "../utils/getSortedPosts";
+import { getSlug } from "../utils/getSlug";
 
 export async function GET(context: APIContext) {
   const posts = await getCollection("blog");
@@ -15,7 +16,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${post.id}/`,
+      link: `/blog/${getSlug(post.id)}/`,
     })),
   });
 }

@@ -1,0 +1,317 @@
+---
+title: "Claude Code로 Astro 블로그 만들고 Cloudflare Pages에 배포하기"
+description: "Claude Code를 활용하여 Astro 5 + Tailwind CSS v4 블로그를 처음부터 구축하고, Cloudflare Pages에 배포한 전체 과정을 정리합니다."
+pubDate: 2026-02-20
+category: "Blog"
+tags: ["Astro", "Claude Code", "Cloudflare Pages", "Tailwind CSS", "블로그", "blog", "AI"]
+heroImage: "/images/blog/2026-02-20-astro-blog-with-claude-code_hero.png"
+draft: false
+
+---
+
+## 들어가며
+
+이 블로그는 **Claude Code**를 이용하여 만들었습니다.  
+빈 git 저장소에서 시작하여 **Astro**로 블로그를 구축하고, **Cloudflare Pages**에 배포하기까지 전체 과정을 공유합니다.
+
+단순히 "블로그 만들어줘"가 아니라, Claude Code에게 요구사항을 주고, 구현 플랜(설계)을 짜게 한 뒤 
+하나씩 요청하고 확인하면서 진행한 실제 워크플로우입니다.
+<br/>
+---
+<br/>
+## 기술 스택
+
+| 항목 | 기술 |
+|------|------|
+| 프레임워크 | Astro 5 (정적 출력) |
+| 스타일링 | Tailwind CSS v4 (Vite 플러그인, CSS-first 설정) |
+| 콘텐츠 | MDX (Content Collections + glob loader + Zod 스키마) |
+| 타입 | TypeScript (strict) |
+| 폰트 | Pretendard (한국어 웹폰트, CDN) |
+| 댓글 | giscus (GitHub Discussions 기반) |
+| 분석 | Google Analytics |
+| 배포 | Cloudflare Pages (GitHub 연동 자동 배포) |
+<br/>
+---
+<br/>
+## Claude Code와의 작업 흐름
+
+![Claude Code 시작 화면](/images/blog/2026-02-20-astro-blog-with-claude-code_welcome.png)
+
+
+### 1단계: 프로젝트 초기화
+
+> **요청**: "astro를 이용하여 클라우드플레어에 올릴 블로그를 만드려고 해"
+
+Claude Code가 빈 저장소 상태를 확인한 뒤, 
+콘텐츠 형식(MDX), 스타일링(Tailwind CSS), 기능(다크모드, RSS 등), 배포 방식(Cloudflare Pages)에 질문했습니다.  
+그 질문을 통해 요구사항을 완성했습니다.
+
+<br />
+
+### 2단계: 디자인 레퍼런스 공유
+
+> **요청**: "https://sperea.es/ 이런 느낌 좋은거 같아"
+
+레퍼런스 사이트를 전달하자 Claude Code가 직접 사이트를 분석했습니다:
+- 미니멀한 디자인, 넓은 여백, 깔끔한 타이포그래피
+- 블로그 목록: 날짜, 읽기 시간, 카테고리, 태그(pill), 요약
+- 다크/라이트 모드 전환
+- 글래스모피즘 헤더 (backdrop-blur)
+
+이 분석 결과를 바탕으로 Claude Code가 Plan 모드에 진입하여 전체 구현 계획을 수립했습니다.  
+코드를 작성하기 전에 먼저 계획을 보여주고 승인을 받는 방식으로 사용자가 확인한 사항만 반영 됩니다.
+
+
+Claude Code가 제시한 구현 계획(설계)는 다음과 같습니다:
+**기술 스택 결정**
+- Astro 5 (정적 사이트 생성) + Tailwind CSS v4 (Vite 플러그인 방식) + MDX + TypeScript (strict)
+- Cloudflare Pages 정적 배포 (SSR 불필요)
+- Pretendard 한국어 웹폰트
+ <div class="mt-8" />
+**핵심 기능 설계**
+- 다크/라이트 모드: `@custom-variant dark` (Tailwind v4) + `localStorage` + 시스템 설정 감지 + FOUC 방지 inline 스크립트
+- 블로그 목록: 날짜, 읽기 시간, 카테고리, 태그(pill), 요약, 화살표 링크
+- 콘텐츠 컬렉션: Astro 5 Content Layer API (`glob` loader), Zod 스키마로 frontmatter 검증
+- RSS 피드: `@astrojs/rss` 사용
+- 반응형: 모바일 햄버거 메뉴, 글래스모피즘 헤더
+- SEO: Open Graph, Twitter Card, canonical URL, sitemap
+ <div class="mt-8" />
+**구현 순서**
+|  |  |
+|------|------|
+| 1  | `npm create astro@latest` 프로젝트 스캐폴딩 |
+| 2  | 의존성 설치 (tailwindcss, @tailwindcss/vite, @astrojs/mdx, @astrojs/rss, @astrojs/sitemap) |
+| 3  | 설정 파일 작성 (astro.config.mjs, tsconfig.json, global.css, content.config.ts) |
+| 4  | 유틸리티 함수 (readingTime, formatDate, getSortedPosts) |
+| 5  | 컴포넌트 (ThemeToggle, Header, Footer, Hero, TagPill, BlogCard) |
+| 6  | 레이아웃 (BaseLayout, BlogPostLayout) |
+| 7  | 페이지 (index, blog/index, blog/[...slug], about, contact, rss.xml) |
+| 8  | 샘플 블로그 글 |
+| 9  | 배포 설정 (wrangler.jsonc, robots.txt, favicon) |
+| 10 | `npm run dev` 로컬 테스트 & `npm run build` 빌드 확인 |
+
+이 계획을 확인한 뒤 승인하면, Claude Code가 순서대로 구현을 진행합니다.
+
+<br />
+
+### 3단계: 프로젝트 구조 생성
+
+Claude Code가 한번에 전체 프로젝트를 스캐폴딩했습니다:
+
+```
+src/
+├── content.config.ts          # 콘텐츠 컬렉션 스키마
+├── content/blog/              # MDX 블로그 글
+├── styles/global.css          # Tailwind v4 + 다크모드 + prose
+├── layouts/
+│   ├── BaseLayout.astro       # HTML 셸, SEO, 폰트, 다크모드
+│   └── BlogPostLayout.astro   # 블로그 글 레이아웃
+├── components/
+│   ├── Header.astro           # 네비게이션 + 모바일 메뉴
+│   ├── Footer.astro           # 소셜 아이콘
+│   ├── ThemeToggle.astro      # 다크/라이트 토글
+│   ├── Hero.astro             # 홈 히어로 섹션
+│   ├── BlogCard.astro         # 블로그 목록 카드
+│   ├── TagPill.astro          # 태그 pill 컴포넌트
+│   └── Giscus.astro           # 댓글
+├── pages/
+│   ├── index.astro            # 홈 (히어로 + 최근 글)
+│   ├── about.astro            # 소개
+│   ├── rss.xml.ts             # RSS 피드
+│   └── blog/
+│       ├── index.astro        # 목록 (카테고리 필터)
+│       └── [...slug].astro    # 글 동적 라우트
+└── utils/
+    ├── readingTime.ts         # 한국어 읽기 시간 계산
+    ├── formatDate.ts          # 한국어 날짜 포맷
+    └── getSortedPosts.ts      # 날짜순 정렬
+```
+
+<br />
+
+### 4단계: 세부 수정 요청들
+
+큰 틀을 잡은 구현이 끝난 뒤 세부 사항은 Claude Code와 티키타카를 통해서 만들었습니다.  
+Claude Code에게 자연어로 바로 요청하거나,  
+필요한 기능에 대해서 물어보면 Claude Code의 답변을 확인하고 승인하여 세부 사항 구현을 진행하였습니다.
+
+
+**1) 사이트 이름 변경**
+> **요청**: "왼쪽 상단 dev.blog는 ai.dev.blog로 바꿔줘"
+
+→ Header, Footer, 모든 페이지 타이틀, RSS 피드까지 8개 파일을 한번에 변경
+ <div class="mt-8" />
+**2) 불필요한 요소 제거**
+> **요청**: "파비콘은 어떻게 구성한거야?"
+→ 일반적으로 astro 블로그에서 사용하는 파비콘을 설정되었음
+ <div class="mt-8" />
+> **요청**: "파비콘 삭제해줘"
+→ `public/favicon.svg` 파일 삭제 + `BaseLayout.astro`에서 `<link rel="icon">` 태그 제거
+ <div class="mt-8" />
+**3) 페이지 삭제 + Footer 개선**
+> **요청**: "연락처 페이지는 없애줘. footer에 RSS, Github에 아이콘 넣어주고 LinkedIn, Instagram도 추가해줘"
+→ `contact.astro` 삭제 + Header 네비게이션에서 제거 + Footer에 SVG 아이콘 추가 (각각 브랜드 색상 호버)
+ <div class="mt-8" />
+**4) 테스트 글 정리**
+> **요청**: "astro블로그 시작하기와, Tailwind CSS 글은 테스트 글이니까 지워줘"
+→ 테스트용 MDX 파일 2개 삭제
+
+<br />
+
+### 5단계: 댓글 시스템 (giscus)
+
+> **요청**: "댓글 넣고 싶은데 어떻게 구성하지?"
+
+Claude Code의 추천
+- giscus — GitHub Discussions 기반. 무료, 다크모드 지원, Markdown/코드블록 지원, 리액션 지원    
+- utterances — GitHub Issues 기반. 심플하지만 Issues에 댓글이 쌓여 지저분함
+- Disqus — 전통적 댓글 서비스. 무료 플랜에 광고 포함                                                                                                                                                                                                                                                                                                                                                              
+giscus를 추천. 개발 블로그 독자층(GitHub 계정 보유)에 딱 맞고, Discussions를 사용해서 Issues보다 깔끔하며, 다크모드 자동 연동이 되기 때문
+ <div class="mt-8" />
+Claude Code가 안내한 순서:
+1. GitHub 저장소에서 Discussions 활성화
+2. [giscus 앱](https://github.com/apps/giscus) 설치
+3. "완료했어" 라고 알려주자 Claude Code가 GitHub API로 저장소 ID와 카테고리 ID를 자동 조회
+4. `Giscus.astro` 컴포넌트 생성 + `BlogPostLayout.astro`에 추가
+
+giscus 컴포넌트의 핵심은 다크모드 연동입니다:
+
+```javascript
+// 테마 변경 시 giscus 테마도 동기화
+const observer = new MutationObserver(() => {
+  const iframe = document.querySelector("iframe.giscus-frame");
+  const theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+  iframe?.contentWindow?.postMessage(
+    { giscus: { setConfig: { theme } } },
+    "https://giscus.app"
+  );
+});
+observer.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ["class"],
+});
+```
+
+`MutationObserver`로 `<html>` 태그의 `class` 변경을 감지하여, 다크모드 토글 시 giscus iframe에 `postMessage`로 테마를 전달합니다.
+
+<br />
+
+### 6단계: Cloudflare Pages 배포
+
+> **요청**: "commit&push를 했어. 이걸 cloudflare page에 배포하려고 하는데 다음 작업은 어떻게 해야 하지?"
+
+Claude Code가 두 가지 방법을 안내했고, GitHub 연동 자동 배포를 추천:
+1. [Cloudflare 대시보드](https://dash.cloudflare.com/) > **Workers & Pages** > **Create**                                                                                                      
+2. GitHub 저장소 연결                                                                                                                                                                          
+3. 빌드 설정: Framework `Astro`, Build command `npm run build`, Output `dist`                                                                                                                  
+4. 배포 완료 → `https://ai-dev-blog.pages.dev`   
+
+Claude Code가 알려준 방법으로는 Pages를 추가할 수 없어서 찾는데 시간이 좀 걸렸습니다.
+가끔 잘못된 답변을 하기 때문에 반드시 확인하는 과정이 필요합니다.
+다음과 같이 하면 Cloudflare Pages를 추가할 수 있습니다.
+
+상단에 `+Add`에 들어가면 Pages를 추가하는 메뉴가 있습니다.
+![Cloudflare Pages 추가](/images/blog/2026-02-20-astro-blog-with-claude-code_cloudflare_1.png)
+
+`Import an existing Git repository`에 있는 `Get started`를 선택합니다.
+![Git repository 연결](/images/blog/2026-02-20-astro-blog-with-claude-code_cloudflare_2.png)
+
+`Add account`로 Github 계정을 연결하고 repository를 선택합니다.
+그 후 Begin setup을 누르면 Github과 연동됩니다.
+![빌드 설정](/images/blog/2026-02-20-astro-blog-with-claude-code_cloudflare_3.png)
+
+빌드 설정까지 해주면 git이 업데이트 될 때마다 빌드된 후 배포됩니다.
+
+배포 후 site URL이 이전 값으로 되어있는 것을 Claude Code가 확인하고 `astro.config.mjs`를 수정해줬습니다.
+
+<br />
+
+### 7단계: Google Analytics
+
+> **요청**: "구글 analytics 등록하려고 하는데 어떻게 해야 할까?"
+
+Claude Code가 GA 측정 ID 발급 방법을 안내했고, 
+ID(`G-xxxxxxx`)를 전달하자 `BaseLayout.astro`의 `<head>`에 gtag 스크립트를 추가했습니다.
+
+<br />
+
+### 8단계: Notion 연동으로 콘텐츠 작성
+
+> **요청**: "notion 페이지에 있는 내용 가져와서 포스팅 글로 작성해줘"
+
+노션 API키를 알려주면 노션의 내용을 읽어와서 포스팅 글을 작성해줍니다:
+1. `.mcp.json`으로 Notion MCP 서버 연결
+2. Notion API로 검색 → 페이지 찾기 → 블록 트리 순회하며 콘텐츠 추출
+3. 토글 안의 중첩된 콘텐츠까지 재귀적으로 가져옴
+4. Notion의 구조화된 데이터를 깔끔한 MDX 블로그 포스트로 변환
+<br/>
+---
+<br/>
+
+## 핵심 구현 포인트
+
+### 다크모드 (FOUC 방지)
+
+Tailwind CSS v4에서는 CSS-first로 다크모드를 설정합니다:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+FOUC(Flash of Unstyled Content)를 방지하기 위해 `<head>`에 inline 스크립트를 넣어 페이지 렌더링 전에 테마를 적용합니다:
+
+```html
+<script is:inline>
+  (function () {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    }
+  })();
+</script>
+```
+ <br/>
+### 콘텐츠 컬렉션 (Astro 5)
+
+Astro 5의 Content Layer API로 블로그 글을 타입 안전하게 관리합니다:
+
+```typescript
+// src/content.config.ts
+const blog = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    category: z.string().default("일반"),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+```
+<br/>
+### 블로그 목록 카테고리 필터
+
+JavaScript로 클라이언트 사이드 필터링을 구현했습니다. 데스크톱에서는 사이드바, 모바일에서는 토글 pill 형태로 표시됩니다.
+<br/>
+---
+<br/>
+## Claude Code의 강력함
+
+직접했으면 웹 찾아보고, 디버깅 하느라 하루 이상 걸릴 작업을 Claude Code가 1시간만에 끝내줬습니다.
+
+- **자연어로 요청하면 된다**: "파비콘 없애줘", "Footer에 아이콘 넣어줘" 같은 일상적인 요청이 바로 코드로 변환됨
+- **전체 맥락을 기억한다**: 이전 작업 내용을 기억하고 있어서 (/resume이용), 관련 파일을 모두 찾아 일관성 있게 수정
+- **외부 서비스 연동도 가능하다**: Notion MCP로 콘텐츠를 가져오거나, GitHub API로 giscus 설정을 자동화하는 등의 작업도 처리
+- **commit & push까지**: git 작업도 요청하면 적절한 커밋 메시지와 함께 처리
+
+<br/>
+
+## 참고 자료
+
+- [Astro 공식 문서](https://docs.astro.build/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [Cloudflare Pages 배포 가이드](https://docs.astro.build/en/guides/deploy/cloudflare/)
+- [giscus - GitHub Discussions 기반 댓글](https://giscus.app/)
+- [Claude Code](https://claude.ai/code)

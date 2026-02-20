@@ -12,10 +12,11 @@ interface Props {
   updatedDate?: Date;
   category: string;
   tags: string[];
+  heroImage?: string;
   body: string;
 }
 
-const { title, description, pubDate, updatedDate, category, tags, body } =
+const { title, description, pubDate, updatedDate, category, tags, heroImage, body } =
   Astro.props;
 const readingTime = getReadingTime(body);
 ---
@@ -69,6 +70,14 @@ const readingTime = getReadingTime(body);
         )
       }
     </header>
+
+    {heroImage && (
+      <img
+        src={heroImage}
+        alt={title}
+        class="mt-8 w-full rounded-lg"
+      />
+    )}
 
     <!-- Post content -->
     <div class="prose mt-10">

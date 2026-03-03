@@ -103,6 +103,34 @@ body {
   @apply rounded-lg my-6;
 }
 
+.prose table {
+  @apply w-full my-6 border-collapse text-sm;
+}
+
+.prose thead th {
+  @apply bg-gray-100 text-left font-semibold px-4 py-2 border border-border-light;
+}
+
+:where(.dark) .prose thead th {
+  @apply bg-gray-800 border-border-dark;
+}
+
+.prose tbody td {
+  @apply px-4 py-2 border border-border-light;
+}
+
+:where(.dark) .prose tbody td {
+  @apply border-border-dark;
+}
+
+.prose tbody tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+:where(.dark) .prose tbody tr:nth-child(even) {
+  @apply bg-gray-800/50;
+}
+
 .prose hr {
   @apply my-8 border-border-light;
 }

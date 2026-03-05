@@ -1,0 +1,321 @@
+---
+title: "Mac mini 24/7 운영 위한 항공권 가격 트래커 구현"
+description: "Mac mini + OpenClaw 환경 위에 Playwright 크롤러, SQLite, Discord 알림, Vercel 대시보드를 조합하여 항공권 최저가 자동 추적 시스템을 구축한 구현기입니다."
+pubDate: 2026-03-04
+category: "오픈클로"
+tags: ["OpenClaw", "Mac mini", "Playwright", "자동화", "Discord", "Next.js", "Python"]
+heroImage: "/images/blog/2026-03-04-openclaw-flight-tracker_hero.png"
+draft: false
+---
+
+> Mac mini + OpenClaw 환경 위에, 항공권 가격을 주기적으로 트랙킹 하는 자동화 시스템을 구축한 기록입니다.
+
+<br/>
+
+## 목표
+
+매번 항공권 사이트를 직접 확인하는 대신,
+
+- 정해진 노선의 가격을 **주기적으로 수집**하고
+- 최저가 변동이 있으면 **즉시 알림** 받고
+- 하루 4번 **요약 브리핑**을 받는 것
+
+을 목표로 만들었습니다.
+
+전체 코드는 [GitHub 저장소](https://github.com/jrkim3888/airplane_ticket_price_tracker)에 공개되어 있습니다.
+
+---
+<br/>
+
+## 아키텍처
+
+구성은 단순하게 유지했습니다.
+
+![아키텍처 다이어그램](/images/blog/2026-03-04-openclaw-flight-tracker_architecture.svg)
+
+핵심 구성 요소는 다음과 같습니다:
+
+1. **Playwright 크롤러** (`tracker.py`) — 네이버 항공권 검색 페이지 스크래핑
+2. **SQLite 저장소** (`flight_tracker.db`) — WAL 모드로 동시 읽기/쓰기 안전
+3. **Discord 알림** (`tracker.py` + `briefing.py`) — REST API v10 직접 호출
+4. **Vercel 대시보드** — Next.js + Recharts, `data.json` 기반 렌더링
+
+데이터 흐름:
+
+크롤러 실행 → DB 업데이트 → `data.json` export → GitHub push → Vercel 반영
+
+<br/>
+
+## 추적 조건
+
+### 정기 구간 (ROUTES)
+
+| Route ID | 출발 | 도착 | 라벨 | 출발 시간 제한 | 귀국 시간 제한 |
+|----------|------|------|------|---------------|---------------|
+| 1 | ICN | FUK | 후쿠오카 | 18시 이후 | 16시 이후 |
+| 2 | ICN | NRT | 도쿄 나리타 | 18시 이후 | 16시 이후 |
+| 3 | GMP | HND | 도쿄 하네다 | 18시 이후 | 16시 이후 |
+
+금요일 퇴근 후 출발 → 일요일 오후 귀국하는 **금→일 2박 패턴**이 기본입니다.
+
+### 특별 구간 (SPECIAL_ROUTES)
+
+| Route ID | 출발 | 도착 | 라벨 | 지정 날짜 |
+|----------|------|------|------|----------|
+| 4 | ICN | DPS | 발리 | 5/1-5, 5/22-25 |
+| 5 | ICN | PQC | 푸꾸옥 | 5/1-5, 5/22-25 |
+| 6 | ICN | HKT | 푸켓 | 5/1-5, 5/22-25 |
+
+항공편이 많은 일본 노선 외에 트랙킹 하고 싶은 구간
+
+### 필터 조건
+- 직항만 (경유 제외)
+- 동일 항공사 왕복만 (혼합 캐리어 제거)
+- 정기 구간: 출발 18시 이후 / 귀국 16시 이후 (특별 구간은 시간 관계없이)
+- 스캔 범위: 16주 앞까지
+- `SPECIAL_DATES`로 연휴 기간에 항공편에 대해서도 추가함
+
+---
+<br/>
+
+## 구현 포인트 1: 네이버 항공권 스크래핑
+
+[네이버 항공권](https://flight.naver.com/) 사이트는 공개 API가 없습니다.  
+Playwright로 페이지를 렌더링한 뒤 `<main>` 요소의 `innerText`를 통째로 가져와서 텍스트 파싱하는 방식을 사용했습니다.
+
+![네이버 항공권 사이트](/images/blog/2026-03-04-openclaw-flight-tracker_naver.png)
+
+
+### URL 구성
+
+```python
+# config.py의 build_url()
+base = "https://flight.naver.com/flights/international"
+url = f"{base}/{origin}-{dest}-{depart}/{dest}-{origin}-{return_date}?adult={pax}&fareType=Y"
+```
+
+네이버는 공항 코드와 도시 코드를 구분하므로, 일부 노선은 `naver_origin`/`naver_dest` 오버라이드가 필요합니다. 예를 들어 푸켓은 `HKT:city`로 지정해야 합니다.
+
+### 봇 감지 우회
+
+네이버는 자동화 접근을 감지하므로 몇 가지 조치를 취했습니다:
+
+```python
+# tracker.py
+context = await browser.new_context(
+    user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+               "AppleWebKit/537.36 (KHTML, like Gecko) "
+               "Chrome/131.0.0.0 Safari/537.36"
+)
+
+# navigator.webdriver 속성 제거
+await page.add_init_script("""
+    Object.defineProperty(navigator, 'webdriver', {get: () => undefined})
+""")
+```
+
+추가로:
+- `--disable-blink-features=AutomationControlled` Chrome 플래그
+- 요청 간 2~5초 랜덤 딜레이
+- 페이지 로드 후 8초 대기 (JS 렌더링 완료 보장)
+
+### 파서 안정화
+
+초기에는 "결과 없음"이 자주 발생했습니다. `parse_naver_flights()` 함수가 핵심인데, 개선한 포인트는 다음과 같습니다:
+
+- **출발 시간 패턴 기반 블록 탐지**: `HH:MM{공항코드}` 패턴으로 항공편 블록 시작점을 찾음
+- **직항 판별 범위 확장**: `i+2..i+4`까지 탐색 (+1일 케이스 대응)
+- **메타 텍스트 키워드 제외**: 광고, 안내 문구 등 노이즈 필터링
+- **혼합 항공사 왕복 조합 제거**: 가는편과 오는편 사이에 다른 항공사명이 나타나면 해당 조합을 버림
+- **항공사 식별**: 항공편 블록 이전 라인을 역방향 탐색하여 항공사명 추출
+
+스크래핑은 결국 "한 번 되는 코드"보다 **운영 중에도 버티는 파서**가 중요했습니다.
+
+<br/>
+
+## 구현 포인트 2: 3인 가격 (pax3_price)
+
+실제 가족 여행 시 체감가를 보려고, 최저가를 찾은 뒤 **동일 노선을 `adult=3`으로 재조회**합니다.
+
+```python
+# tracker.py — check_pax3_prices()
+pax3_url = build_url(route, depart, return_date, pax=3)
+# 같은 항공사로 3석 예약 가능한지 확인
+```
+
+저장되는 값의 의미는 다음과 같습니다:
+
+| 값 | 의미 |
+|---|------|
+| `NULL` | 조회 실패/미확인 |
+| `-1` | 동일 항공사 3석 불가 |
+| `양수` | 3인 예약 시 1인당 가격 |
+
+덕분에 대시보드 최저가 카드에서 "1인 기준 최저"와 "3인 동시 예매 가능 가격"을 같이 비교할 수 있습니다.
+
+<br/>
+
+## 구현 포인트 3: 데이터 모델
+
+SQLite에 5개 테이블을 두고 있습니다:
+
+```sql
+-- 날짜 조합별 현재 최저가 (핵심 테이블)
+weekly_lowest (route_id, depart_date, return_date, min_price, airline,
+               flight_info, kal_price, kal_flight_info, pax3_price, updated_at)
+
+-- 스캔 이력 (분 단위 중복 제거)
+scan_history (route_id, depart_date, return_date, price, airline, flight_info, scanned_at)
+
+-- 노선별 전체 최저가 시계열 (대시보드 차트용)
+price_history (route_id, snapshot_at, overall_min_price, airline, depart_date, flight_info)
+
+-- 주간별 가격 시계열 (대시보드 주간 차트용)
+weekly_price_history (route_id, depart_date, return_date, snapshot_at, min_price, airline, flight_info)
+
+-- 노선 정의 (config에서 동기화)
+routes (id, origin, destination, depart_time_from, return_time_from)
+```
+
+**대한항공(KAL) 별도 추적**: `weekly_lowest`에 `kal_price`와 `kal_flight_info`를 따로 저장합니다. 전체 최저가와 별개로 대한항공 가격을 항상 비교할 수 있도록 했습니다.
+
+### 정리 정책
+
+- 과거 출발일의 `weekly_lowest`는 매 크롤 시작 시 정리
+- 30일 이상 된 `scan_history`는 삭제
+- **삭제 권한은 `tracker.py`로 단일화** — `briefing.py`는 읽기 전용 (가격 업데이트만 가능)
+
+<br/>
+
+## 구현 포인트 4: 브라우저 크래시 방어
+
+크롤러가 장시간 돌다 보면 Playwright 브라우저가 크래시하는 경우가 있습니다. 이때 스크래핑 실패를 "결과 없음"으로 오판하면 기존 최저가 데이터를 잘못 삭제할 수 있습니다.
+
+이를 방지하기 위해 `BrowserCrashError` 커스텀 예외를 만들었습니다:
+
+```python
+class BrowserCrashError(Exception):
+    """브라우저 크래시 감지 시 발생 — 데이터 보존"""
+    pass
+```
+
+- **정상 실패** (검색 결과 없음): 해당 `weekly_lowest` 행 삭제 (유효하지 않은 가격 제거)
+- **크래시 실패**: 기존 데이터 보존, 재시도는 다음 크롤 사이클에서
+
+<br/>
+
+## 구현 포인트 5: Discord 알림
+
+### 즉시 알림 (가격 하락 시)
+
+`tracker.py`에서 `update_weekly_lowest()` 실행 후 가격이 하락하면 즉시 Discord로 알림이 전송됩니다:
+
+![최저가 알림](/images/blog/2026-03-04-openclaw-flight-tracker_noti.png)
+
+```
+✈ 최저가 갱신! 인천 → 후쿠오카
+📅 03/27(금) → 03/29(일)
+이전: 520,000원 → 현재: 473,510원 (-8.9%)
+항공사: 에어서울
+🛫 가는편: 18:30 ICN → 20:00 FUK
+🛬 오는편: 17:50 FUK → 19:20 ICN
+📊 노선 전체 최저: 395,500원 (04/10(금) 출발)
+```
+
+
+### 정기 브리핑 (하루 4회)
+
+`briefing.py`는 09/13/17/21시에 실행됩니다. 단순히 DB를 읽는 게 아니라 **발송 전 네이버를 다시 조회하여 가격을 실시간 재검증**합니다.
+
+![정기 브리핑](/images/blog/2026-03-04-openclaw-flight-tracker_briefing.png)
+
+- 가격 확인됨 → 그대로 표시
+- 가격 추가 하락 → DB 업데이트 + "가격 하락!" 표시
+- 가격 상승 (이전 최저가 만료) → DB 업데이트 + 경고 표시
+- 스크래핑 실패 → 경고 표시, DB 데이터 보존
+
+Discord 2,000자 제한에 걸리면 `split_discord_message()`로 자동 분할 전송합니다.
+
+
+### Discord API 호출 방식
+
+별도 봇 프레임워크 없이 REST API를 직접 호출합니다:
+
+```python
+url = f"https://discord.com/api/v10/channels/{CHANNEL_ID}/messages"
+headers = {
+    "Authorization": f"Bot {token}",
+    "Content-Type": "application/json"
+}
+```
+
+봇 토큰은 `openclaw config get channels.discord.token`으로 OpenClaw에서 가져옵니다.
+
+<br/>
+
+## 구현 포인트 6: 대시보드
+
+Next.js 14 (App Router) + Tailwind CSS + Recharts로 구성했습니다.
+
+![대시보드](/images/blog/2026-03-04-openclaw-flight-tracker_vecel_site.png)
+
+
+### 데이터 흐름
+
+1. `tracker.py`의 `export_and_push()`가 DB에서 전체 데이터를 JSON으로 변환
+2. `data.json`을 GitHub에 push
+3. 대시보드가 GitHub raw URL에서 `data.json`을 fetch (`cache: "no-store"`, `force-dynamic`)
+
+
+### 주요 컴포넌트
+
+- **LowestPriceCard** — 노선별 최저가 카드 (3인 가격, 대한항공 가격 비교, 네이버 링크)
+- **WeeklyTable** — 주간별 가격 정렬 테이블 (최저가 행 색상 표시, 박수 배지, 네이버 링크)
+- **OverallChart** — 노선별 전체 최저가 시계열 라인 차트
+- **WeeklyChart** — 주간 셀렉터 드롭다운이 있는 가격 추이 차트
+
+
+### 주의사항
+
+> 대시보드 코드를 변경해도 GitHub push 하면 자동 반영되기는 하지만 무료 티어의 경우 주기가 깁니다. `vercel --prod` 수동 배포를 이용하면 바로 배포됩니다.
+
+<br/>
+
+## 구현 포인트 7: OpenClaw 크론 운영
+
+실운영 스케줄은 다음과 같습니다:
+
+| 작업 | 크론 표현식 | 설명 |
+|------|-----------|------|
+| 크롤러 | `0 * * * *` | 매시 정각 |
+| 브리핑 | `0 9,13,17,21 * * *` | 하루 4회 |
+
+크론에서 실행할 때 `nohup` 백그라운드 패턴을 사용합니다. 크론 셸은 약 12초 만에 종료되고, `tracker.py`는 백그라운드에서 계속 실행됩니다. 로그는 `/tmp/tracker_{hour}pm.log`에 남깁니다.
+
+경험상 핵심은 3가지입니다:
+
+1. **타임아웃 관리**: 브리핑은 hang 감지가 필요합니다 — Playwright가 응답 없이 멈추는 경우를 대비해야 합니다
+2. **권한 관리**: Discord 채널을 private로 전환하면 봇 접근을 재설정해야 합니다
+3. **장비 정책**: Mac mini 수면/절전 영향 점검이 필요합니다 — Energy Saver에서 절전 비활성화는 필수입니다
+
+---
+<br/>
+
+## 구현은
+
+1. **OpenClaw**를 이용해서 기능 명세서를 만들고, 그걸 기반으로 OpenClaw에게 작업을 요청해서 구현했습니다.
+2. **OpenClaw를 쓰면 "개발"과 "정기 실행"을 한 컨텍스트에서 다루기 쉬워집니다.** 크론 등록, 설정값 관리, 디버깅이 하나의 에이전트 환경에서 가능합니다.
+3. 프런트엔드에서 요청을 받지 않기 때문에 백엔드에서는 주기적으로 data.json을 만들어 깃헙에 push하는 방식으로 구현했습니다.
+
+---
+<br/>
+
+## 왜 OpenClaw였나
+
+**Mac mini 위에서 돌아가는 에이전트를 중심**으로, 크롤링 · 스케줄 · 알림 · 운영을 한 번에 묶을 수 있으며 브라우저 릴레이 기능이 매우 잘돌아가서 크롤링이 잘 됩니다.
+
+이번 프로젝트는 "바이브 코딩이 아니라" 명확한 요구사항과 명세를 정의해서 수행한 **"바이브 엔지니어링"**으로 구현하였습니다.
+
+> OpenClaw를 운영 레이어로 두고 자동화 시스템을 실제로 운영하는 시스템 개발
+
+

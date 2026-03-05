@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" fill="none">
+  <style>
+    .box { rx: 8; ry: 8; stroke-width: 2; }
+    .label { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 14px; fill: #e2e8f0; text-anchor: middle; dominant-baseline: central; }
+    .label-sm { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 11px; fill: #94a3b8; text-anchor: middle; dominant-baseline: central; }
+    .label-sub { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 11px; fill: #64748b; text-anchor: middle; dominant-baseline: central; }
+    .arrow { stroke: #475569; stroke-width: 2; marker-end: url(#arrowhead); }
+    .arrow-branch { stroke: #475569; stroke-width: 1.5; stroke-dasharray: 6 3; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="720" height="520" rx="12" fill="#0f172a"/>
+
+  <!-- 1. 네이버 항공권 -->
+  <rect class="box" x="250" y="30" width="220" height="48" fill="#1e293b" stroke="#334155"/>
+  <text class="label" x="360" y="54">네이버 항공권 검색</text>
+
+  <!-- Arrow 1→2 -->
+  <line class="arrow" x1="360" y1="78" x2="360" y2="118"/>
+  <text class="label-sm" x="400" y="98">Playwright</text>
+
+  <!-- 2. tracker.py -->
+  <rect class="box" x="250" y="118" width="220" height="48" fill="#1e3a5f" stroke="#3b82f6"/>
+  <text class="label" x="360" y="136">tracker.py</text>
+  <text class="label-sub" x="360" y="152">스크래핑 → 파싱 → 필터링</text>
+
+  <!-- Arrow 2→3 -->
+  <line class="arrow" x1="360" y1="166" x2="360" y2="206"/>
+
+  <!-- 3. SQLite DB -->
+  <rect class="box" x="250" y="206" width="220" height="48" fill="#1a3329" stroke="#22c55e"/>
+  <text class="label" x="360" y="224">SQLite DB</text>
+  <text class="label-sub" x="360" y="240">flight_tracker.db (WAL)</text>
+
+  <!-- Arrow DB → Discord 즉시알림 -->
+  <line class="arrow-branch" x1="470" y1="220" x2="590" y2="220"/>
+  <line class="arrow" x1="590" y1="220" x2="590" y2="260"/>
+
+  <!-- Arrow DB → briefing.py -->
+  <line class="arrow" x1="360" y1="254" x2="360" y2="300"/>
+
+  <!-- 4. briefing.py -->
+  <rect class="box" x="250" y="300" width="220" height="48" fill="#1e293b" stroke="#334155"/>
+  <text class="label" x="360" y="318">briefing.py</text>
+  <text class="label-sub" x="360" y="334">하루 4회 재검증 + 발송</text>
+
+  <!-- Arrow briefing → Discord 브리핑 -->
+  <line class="arrow-branch" x1="470" y1="324" x2="540" y2="324"/>
+  <line class="arrow" x1="540" y1="324" x2="540" y2="300"/>
+
+  <!-- 5. Discord -->
+  <rect class="box" x="510" y="260" width="170" height="48" fill="#3b1a2e" stroke="#f43f5e"/>
+  <text class="label" x="595" y="278">Discord 알림</text>
+  <text class="label-sub" x="595" y="294">즉시 + 정기 브리핑</text>
+
+  <!-- Arrow DB → data.json export -->
+  <line class="arrow" x1="250" y1="240" x2="140" y2="240"/>
+  <line class="arrow" x1="140" y1="240" x2="140" y2="300"/>
+
+  <!-- 6. data.json → GitHub -->
+  <rect class="box" x="50" y="300" width="180" height="48" fill="#1e293b" stroke="#334155"/>
+  <text class="label" x="140" y="318">data.json → GitHub</text>
+  <text class="label-sub" x="140" y="334">git push (매 크롤 후)</text>
+
+  <!-- Arrow GitHub → Vercel -->
+  <line class="arrow" x1="140" y1="348" x2="140" y2="400"/>
+
+  <!-- 7. Vercel 대시보드 -->
+  <rect class="box" x="50" y="400" width="180" height="48" fill="#2e1a3b" stroke="#a855f7"/>
+  <text class="label" x="140" y="418">Vercel 대시보드</text>
+  <text class="label-sub" x="140" y="434">Next.js + Recharts</text>
+
+  <!-- OpenClaw 크론 영역 표시 -->
+  <rect x="230" y="100" width="260" height="270" rx="12" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="8 4" opacity="0.5"/>
+  <text class="label-sm" x="360" y="385" fill="#f59e0b">OpenClaw 크론 관리 영역</text>
+
+  <!-- 범례 -->
+  <rect x="460" y="420" width="240" height="80" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text class="label-sm" x="580" y="438" fill="#94a3b8">범례</text>
+  <rect x="478" y="449" width="12" height="12" rx="2" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text class="label-sub" x="530" y="455" text-anchor="start" fill="#94a3b8">크롤러</text>
+  <rect x="570" y="449" width="12" height="12" rx="2" fill="#1a3329" stroke="#22c55e" stroke-width="1"/>
+  <text class="label-sub" x="618" y="455" text-anchor="start" fill="#94a3b8">저장소</text>
+  <rect x="478" y="469" width="12" height="12" rx="2" fill="#3b1a2e" stroke="#f43f5e" stroke-width="1"/>
+  <text class="label-sub" x="530" y="475" text-anchor="start" fill="#94a3b8">알림</text>
+  <rect x="570" y="469" width="12" height="12" rx="2" fill="#2e1a3b" stroke="#a855f7" stroke-width="1"/>
+  <text class="label-sub" x="618" y="475" text-anchor="start" fill="#94a3b8">대시보드</text>
+</svg>

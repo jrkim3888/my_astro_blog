@@ -1,0 +1,111 @@
+---
+title: "OCI 무료 티어에서 OpenClaw 업데이트하기 (메모리 부족 해결)"
+description: "OCI 프리티어(램 1GB) 환경에서 openclaw update 명령 실행 시 메모리 부족으로 실패하는 문제와 NODE_OPTIONS 설정으로 해결하는 방법을 정리합니다."
+pubDate: 2026-03-19
+category: "오픈클로"
+tags: ["OCI", "OpenClaw", "클라우드", "AI", "Cloud"]
+heroImage: "/images/blog/2026-03-19-oci-openclaw-update_hero.png"
+draft: false
+---
+
+OCI 무료 티어에 OpenClaw를 설치한 뒤, 버전 업데이트를 시도하다가 중간에 프로세스가 죽어버리는 경험을 했습니다.
+
+설치 때와 마찬가지로 메모리 문제였고, `NODE_OPTIONS` 환경 변수를 지정해주면 해결됩니다.
+
+> OCI 무료 티어 설치 과정은 [OCI 무료 티어에 OpenClaw 설치하기](/blog/2026-02-24-oci-openclaw-install) 포스팅을 참고하세요.
+
+<br/>
+## 증상
+
+`openclaw update` 를 그냥 실행하면 빌드 도중 JavaScript heap 메모리 부족 오류가 출력되며 프로세스가 강제 종료되거나 특정 패키지의 업데이트가 실패합니다.
+
+```bash
+openclaw update
+```
+
+OCI 프리티어의 RAM은 1GB로, Node.js가 기본적으로 사용하는 힙 메모리 한도(약 512MB~1.5GB)와 겹쳐 업데이트 중 빌드 단계에서 메모리가 고갈됩니다.
+
+<br/>
+## 환경 확인
+
+이전 포스팅에서 설명한 것처럼 SWAP을 16GB로 설정해두었어도 Node.js 힙 한도를 명시적으로 지정하지 않으면 SWAP을 충분히 활용하지 못하고 죽어버립니다.
+
+```bash
+# SWAP 상태 확인
+free -h
+```
+
+```
+               total        used        free      shared  buff/cache   available
+Mem:           968Mi       ...
+Swap:           15Gi       ...
+```
+
+SWAP은 잡혀 있지만 Node.js 프로세스 자체의 힙 한도가 낮아 빌드 도중 OOM(Out of Memory)이 발생합니다.
+
+<br/>
+## 해결 방법
+
+`NODE_OPTIONS` 환경 변수로 힙 한도를 8192MB(8GB)로 올린 뒤 업데이트를 실행합니다.
+
+```bash
+NODE_OPTIONS=--max-old-space-size=8192 openclaw update
+```
+
+이렇게 실행하면 Node.js가 SWAP 영역까지 활용하면서 빌드를 완료할 수 있습니다.
+
+> 설치 때는 `--max-old-space-size=4096`(4GB)으로 충분했지만, 업데이트 시 빌드 과정이 더 무거워 8192MB가 필요했습니다.
+
+<br/>
+## 업데이트 흐름
+
+```bash
+# 1. 업데이트 실행
+NODE_OPTIONS=--max-old-space-size=8192 openclaw update
+
+# 2. 완료 후 버전 확인
+openclaw --version
+```
+
+업데이트가 완료되면 아래와 같이 새 버전 정보가 출력됩니다.
+
+```
+🦞 OpenClaw updated successfully (2026.x.xx)!
+```
+![openclaw 업데이트 완료](/images/blog/2026-03-19-oci-openclaw-update-1.png)
+
+
+<br/>
+## 데몬 재시작
+
+업데이트 후 데몬을 재시작해야 새 버전이 적용됩니다.
+
+```bash
+openclaw daemon restart
+```
+
+재시작 후 상태를 확인합니다.
+
+```bash
+openclaw health
+```
+
+<br/>
+## 정리
+
+| 상황 | NODE_OPTIONS 설정 |
+|------|------------------|
+| 설치 (`install.sh`) | `--max-old-space-size=4096` |
+| 업데이트 (`openclaw update`) | `--max-old-space-size=8192` |
+
+OCI 무료 티어처럼 메모리가 빡빡한 환경에서는 Node.js 힙 한도를 명시적으로 지정하는 것이 필수입니다.  
+SWAP을 아무리 크게 잡아도 Node.js가 스스로 힙을 제한하기 때문에, `NODE_OPTIONS`로 한도를 풀어줘야 SWAP까지 활용할 수 있습니다. 
+<br/>
+또 한가지 업데이트 이후 openclaw gateway가 실행되지 않는다면 ~/.openclaw/openclaw.json 파일에 신규 버전에서 지원하지 않는 config가 있는지 확인해야 합니다.  
+신규 버전에서 지원하지 않는 config가 있으면 gatweay가 정상적으로 올라오지 않습니다.
+
+<br/>
+## 참고 자료
+
+- [OpenClaw 공식 사이트](https://openclaw.ai/)
+- [OpenClaw 공식 문서](https://docs.openclaw.ai/start/faq)

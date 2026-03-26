@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allPosts = await getCollection("blog");
+const publishedPosts = allPosts.filter((p) => !p.data.draft);
+
+const tagCount = new Map<string, number>();
+for (const post of publishedPosts) {
+  for (const tag of post.data.tags) {
+    tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+  }
+}
+const tags = [...tagCount.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="태그 | ai.dev.blog" description="블로그에 사용된 태그 목록입니다.">
+  <section class="mx-auto max-w-4xl px-4 py-10">
+    <h1 class="text-3xl font-bold">태그</h1>
+    <p class="mt-2 text-muted-light dark:text-muted-dark">
+      {tags.length}개의 태그
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      {tags.map(([tag, count]) => (
+        <a
+          href={`/tags/${encodeURIComponent(tag)}`}
+          class="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50"
+        >
+          {tag}
+          <span class="text-xs opacity-60">({count})</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

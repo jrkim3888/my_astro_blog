@@ -3,7 +3,6 @@ import BaseLayout from "./BaseLayout.astro";
 import TagPill from "../components/TagPill.astro";
 import Giscus from "../components/Giscus.astro";
 import { formatDate } from "../utils/formatDate";
-import { getReadingTime } from "../utils/readingTime";
 
 interface Props {
   title: string;
@@ -13,12 +12,10 @@ interface Props {
   category: string;
   tags: string[];
   heroImage?: string;
-  body: string;
 }
 
-const { title, description, pubDate, updatedDate, category, tags, heroImage, body } =
+const { title, description, pubDate, updatedDate, category, tags, heroImage } =
   Astro.props;
-const readingTime = getReadingTime(body);
 ---
 
 <BaseLayout title={`${title} | ai.dev.blog`} description={description}>
@@ -40,8 +37,6 @@ const readingTime = getReadingTime(body);
         <span>{category}</span>
         <span>&middot;</span>
         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-        <span>&middot;</span>
-        <span>{readingTime}</span>
       </div>
 
       <h1 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">

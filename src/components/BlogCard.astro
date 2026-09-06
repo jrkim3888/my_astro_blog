@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "../utils/formatDate";
-import { getReadingTime } from "../utils/readingTime";
 import { getSlug } from "../utils/getSlug";
 import TagPill from "./TagPill.astro";
 
@@ -11,7 +10,6 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate, category, tags, heroImage } = post.data;
-const readingTime = getReadingTime(post.body ?? "");
 ---
 
 <article class="group border-b border-border-light py-6 last:border-b-0 dark:border-border-dark">
@@ -31,8 +29,6 @@ const readingTime = getReadingTime(post.body ?? "");
         <span>{category}</span>
         <span>&middot;</span>
         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-        <span>&middot;</span>
-        <span>{readingTime}</span>
       </div>
 
       <h2 class="mt-2 text-xl font-semibold transition-colors group-hover:text-primary-600 dark:group-hover:text-primary-400">

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">DeepSeek Harness의 교체 지점 구조</title>
+  <desc id="desc">세션 저장, 서브프로세스, 셸, 하위 에이전트, 모델, 에이전트 루프마다 여러 구현체가 있고 설정 파일에서 하나를 골라 끼우는 구조.</desc>
+  <rect width="1200" height="560" fill="#ffffff"/>
+  <style>
+    .h{font:700 25px sans-serif;fill:#171717}
+    .col{font:700 17px sans-serif;fill:#667085;letter-spacing:.5px}
+    .slot{font:600 19px sans-serif;fill:#303846}
+    .chip{font:17px sans-serif;fill:#303846}
+    .note{font:16px sans-serif;fill:#667085}
+    .slotbox{fill:#eaf1ff;stroke:#2f6fed;stroke-width:2}
+    .opt{fill:#f6f8fc;stroke:#d8dee9;stroke-width:2}
+    .optg{fill:#ecf8f0;stroke:#4a9b67;stroke-width:2}
+    .line{stroke:#c3cbd8;stroke-width:2;fill:none}
+    .arrow{stroke:#8b97a8;stroke-width:2.5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#8b97a8"/></marker>
+  </defs>
+
+  <text x="50" y="48" class="h">교체 지점(swap point)마다 구현을 골라 끼운다</text>
+  <text x="50" y="92" class="col">교체 지점</text>
+  <text x="430" y="92" class="col">선택 가능한 구현</text>
+
+  <rect x="50" y="110" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="143" text-anchor="middle" class="slot">세션 저장</text>
+  <path d="M260 136 H330" class="arrow"/>
+  <rect x="340" y="110" width="130" height="52" rx="10" class="opt"/><text x="405" y="143" text-anchor="middle" class="chip">JSONL</text>
+  <rect x="486" y="110" width="130" height="52" rx="10" class="opt"/><text x="551" y="143" text-anchor="middle" class="chip">SQLite</text>
+
+  <rect x="50" y="178" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="211" text-anchor="middle" class="slot">서브프로세스</text>
+  <path d="M260 204 H330" class="arrow"/>
+  <rect x="340" y="178" width="150" height="52" rx="10" class="opt"/><text x="415" y="211" text-anchor="middle" class="chip">로컬 실행기</text>
+  <rect x="506" y="178" width="190" height="52" rx="10" class="opt"/><text x="601" y="211" text-anchor="middle" class="chip">E2B 샌드박스</text>
+
+  <rect x="50" y="246" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="279" text-anchor="middle" class="slot">셸</text>
+  <path d="M260 272 H330" class="arrow"/>
+  <rect x="340" y="246" width="110" height="52" rx="10" class="opt"/><text x="395" y="279" text-anchor="middle" class="chip">bash</text>
+  <rect x="466" y="246" width="190" height="52" rx="10" class="opt"/><text x="561" y="279" text-anchor="middle" class="chip">샌드박스 bash</text>
+  <rect x="672" y="246" width="160" height="52" rx="10" class="opt"/><text x="752" y="279" text-anchor="middle" class="chip">PowerShell</text>
+
+  <rect x="50" y="314" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="347" text-anchor="middle" class="slot">하위 에이전트</text>
+  <path d="M260 340 H330" class="arrow"/>
+  <rect x="340" y="314" width="180" height="52" rx="10" class="optg"/><text x="430" y="347" text-anchor="middle" class="chip">Claude Code</text>
+  <rect x="536" y="314" width="120" height="52" rx="10" class="optg"/><text x="596" y="347" text-anchor="middle" class="chip">Codex</text>
+  <rect x="672" y="314" width="110" height="52" rx="10" class="optg"/><text x="727" y="347" text-anchor="middle" class="chip">ACP</text>
+  <rect x="798" y="314" width="150" height="52" rx="10" class="opt"/><text x="873" y="347" text-anchor="middle" class="chip">외 3종</text>
+
+  <rect x="50" y="382" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="415" text-anchor="middle" class="slot">모델</text>
+  <path d="M260 408 H330" class="arrow"/>
+  <rect x="340" y="382" width="180" height="52" rx="10" class="opt"/><text x="430" y="415" text-anchor="middle" class="chip">DeepSeek</text>
+  <rect x="536" y="382" width="180" height="52" rx="10" class="opt"/><text x="626" y="415" text-anchor="middle" class="chip">OpenRouter</text>
+  <rect x="732" y="382" width="200" height="52" rx="10" class="opt"/><text x="832" y="415" text-anchor="middle" class="chip">그 외 제공자</text>
+
+  <rect x="50" y="450" width="210" height="52" rx="10" class="slotbox"/>
+  <text x="155" y="483" text-anchor="middle" class="slot">에이전트 루프</text>
+  <path d="M260 476 H330" class="arrow"/>
+  <rect x="340" y="450" width="150" height="52" rx="10" class="opt"/><text x="415" y="483" text-anchor="middle" class="chip">기본 루프</text>
+  <rect x="506" y="450" width="230" height="52" rx="10" class="optg"/><text x="621" y="483" text-anchor="middle" class="chip">PTC(Code Mode)</text>
+  <rect x="752" y="450" width="180" height="52" rx="10" class="opt"/><text x="842" y="483" text-anchor="middle" class="chip">직접 구현</text>
+
+  <path d="M980 110 V502" class="line"/>
+  <text x="1000" y="280" class="note">설정 파일에서</text>
+  <text x="1000" y="306" class="note">구현을 선택하고,</text>
+  <text x="1000" y="332" class="note">profile로 패치를</text>
+  <text x="1000" y="358" class="note">쌓아 합성</text>
+  <text x="50" y="538" class="note">저장소 packages 디렉터리 기준 53개 패키지로 기능이 분리되어 있다</text>
+</svg>

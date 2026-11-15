@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
+  <title id="title">질문을 나눠 보낼 때와 한 번에 묶어 보낼 때의 비용 차이</title>
+  <desc id="desc">같은 4,000토큰 레코드에 20개 검사를 할 때, 요청 20개로 나누면 입력이 20번 과금되어 1,000건당 약 8.1달러지만, 한 요청에 질문 20개를 묶으면 입력이 한 번만 과금되어 약 0.5달러가 된다.</desc>
+  <rect width="1200" height="470" fill="#ffffff"/>
+  <style>
+    .h{font:700 24px sans-serif;fill:#171717}
+    .sub{font:17px sans-serif;fill:#667085}
+    .text{font:19px sans-serif;fill:#303846}
+    .small{font:16px sans-serif;fill:#667085}
+    .big{font:700 30px sans-serif;fill:#c0504d}
+    .bigg{font:700 30px sans-serif;fill:#4a9b67}
+    .box{fill:#f6f8fc;stroke:#d8dee9;stroke-width:2}
+    .red{fill:#fdeeee;stroke:#c0504d;stroke-width:2}
+    .green{fill:#ecf8f0;stroke:#4a9b67;stroke-width:2}
+    .blue{fill:#eaf1ff;stroke:#2f6fed;stroke-width:2}
+    .arrow{stroke:#8b97a8;stroke-width:2.5;fill:none;marker-end:url(#a)}
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#8b97a8"/></marker>
+  </defs>
+
+  <text x="50" y="42" class="h">같은 일을 어떻게 나눠 보내느냐에 따라 비용이 16배 갈린다</text>
+  <text x="50" y="70" class="sub">4,000토큰짜리 레코드 하나에 검사 20개를 수행할 때 · 1,000건 기준</text>
+
+  <text x="50" y="126" class="h">요청을 20번 나눠 보내면</text>
+  <rect x="50" y="146" width="150" height="70" rx="10" class="blue"/>
+  <text x="125" y="178" text-anchor="middle" class="text">레코드</text>
+  <text x="125" y="202" text-anchor="middle" class="small">4,000토큰</text>
+
+  <path d="M200 181 H280" class="arrow"/>
+
+  <rect x="285" y="140" width="110" height="36" rx="8" class="red"/><text x="340" y="165" text-anchor="middle" class="small">요청 1</text>
+  <rect x="285" y="182" width="110" height="36" rx="8" class="red"/><text x="340" y="207" text-anchor="middle" class="small">요청 2</text>
+  <rect x="285" y="224" width="110" height="36" rx="8" class="red"/><text x="340" y="249" text-anchor="middle" class="small">… 요청 20</text>
+
+  <text x="420" y="178" class="text">입력 4,000토큰을</text>
+  <text x="420" y="206" class="text">매번 다시 과금</text>
+
+  <path d="M660 195 H740" class="arrow"/>
+  <rect x="745" y="150" width="240" height="90" rx="12" class="red"/>
+  <text x="865" y="190" text-anchor="middle" class="big">약 $8.10</text>
+  <text x="865" y="218" text-anchor="middle" class="small">1,000건 기준</text>
+
+  <path d="M50 290 H1150" stroke="#e4e8ef" stroke-width="2"/>
+
+  <text x="50" y="336" class="h">한 요청에 질문 20개를 묶으면</text>
+  <rect x="50" y="356" width="150" height="70" rx="10" class="blue"/>
+  <text x="125" y="388" text-anchor="middle" class="text">레코드</text>
+  <text x="125" y="412" text-anchor="middle" class="small">4,000토큰</text>
+
+  <path d="M200 391 H280" class="arrow"/>
+
+  <rect x="285" y="356" width="260" height="70" rx="10" class="green"/>
+  <text x="415" y="388" text-anchor="middle" class="text">요청 1개 · 질문 20개</text>
+  <text x="415" y="412" text-anchor="middle" class="small">질문별 지시문 토큰만 추가</text>
+
+  <text x="575" y="388" class="text">입력은 한 번만</text>
+  <text x="575" y="416" class="text">과금</text>
+
+  <path d="M740 391 H740 M700 391 H740" class="arrow"/>
+  <rect x="745" y="356" width="240" height="90" rx="12" class="green"/>
+  <text x="865" y="396" text-anchor="middle" class="bigg">약 $0.50</text>
+  <text x="865" y="424" text-anchor="middle" class="small">1,000건 기준</text>
+
+  <text x="1010" y="392" class="small">출력 토큰은</text>
+  <text x="1010" y="416" class="small">양쪽 모두 무과금</text>
+</svg>

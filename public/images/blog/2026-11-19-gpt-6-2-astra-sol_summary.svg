@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">GPT-6.2 Astra / Sol — 가격은 20% 내렸지만 1위는 내줬다</title>
+  <desc id="desc">GPT-6.2 Astra는 API 가격을 20% 내려 Claude Fable 5.2와 같은 8달러 대 40달러가 되었지만, Artificial Analysis 지능 지수에서는 65점의 Fable 5.2에 3점 뒤진 62점으로 2위다. 또한 AI 자기 개선 항목에서 High 등급을 받고 외부 공개된 첫 모델이다.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#f7f9fd"/>
+      <stop offset="100%" stop-color="#eef2fa"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2f6fed"/>
+      <stop offset="100%" stop-color="#4a9b67"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1180" cy="420" r="360" fill="#2f6fed" opacity="0.035"/>
+
+  <!-- 왼쪽: 타이틀 -->
+  <rect x="80" y="230" width="268" height="38" rx="19" fill="#eaf1ff"/>
+  <text x="104" y="256" font-family="sans-serif" font-size="18" font-weight="700" fill="#2f6fed" letter-spacing="0.5">OpenAI · 2026.11.17</text>
+
+  <text x="80" y="348" font-family="sans-serif" font-size="54" font-weight="700" fill="#171717">가격은 20% 내렸지만</text>
+  <text x="80" y="418" font-family="sans-serif" font-size="54" font-weight="700" fill="#171717">1위는 내줬다</text>
+
+  <rect x="80" y="450" width="92" height="6" rx="3" fill="url(#accent)"/>
+
+  <text x="80" y="508" font-family="sans-serif" font-size="32" font-weight="700" fill="#2f6fed">GPT-6.2 Astra · Sol</text>
+  <text x="80" y="542" font-family="sans-serif" font-size="19" fill="#667085">최상위 모델과 일상 업무 모델을 함께 공개</text>
+
+  <!-- 가격 박스 -->
+  <rect x="80" y="580" width="620" height="110" rx="14" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="112" y="630" font-family="sans-serif" font-size="36" font-weight="700" fill="#2f6fed">$8 / $40</text>
+  <text x="112" y="662" font-family="sans-serif" font-size="16" fill="#667085">입력 / 출력 · 100만 토큰</text>
+  <line x1="420" y1="602" x2="420" y2="668" stroke="#e4e8ef" stroke-width="2"/>
+  <text x="452" y="626" font-family="sans-serif" font-size="23" font-weight="700" fill="#4a9b67">20% 인하</text>
+  <text x="452" y="658" font-family="sans-serif" font-size="15" fill="#667085">캐시 입력 $0.40 (60%↓)</text>
+
+  <!-- 오른쪽 카드 1: 지능 지수 -->
+  <rect x="760" y="210" width="800" height="280" rx="16" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="792" y="256" font-family="sans-serif" font-size="21" font-weight="700" fill="#171717">Artificial Analysis 지능 지수 v5</text>
+  <text x="792" y="284" font-family="sans-serif" font-size="16" fill="#667085">토큰 단가는 둘 다 $8 / $40</text>
+
+  <text x="1010" y="342" text-anchor="end" font-family="sans-serif" font-size="17" font-weight="600" fill="#303846">Claude Fable 5.2</text>
+  <rect x="1030" y="318" width="371" height="36" rx="7" fill="#d79a3c"/>
+  <text x="1415" y="344" font-family="sans-serif" font-size="23" font-weight="700" fill="#171717">65</text>
+  <text x="1462" y="344" font-family="sans-serif" font-size="16" fill="#667085">1위</text>
+
+  <text x="1010" y="404" text-anchor="end" font-family="sans-serif" font-size="17" font-weight="600" fill="#303846">GPT-6.2 Astra</text>
+  <rect x="1030" y="380" width="354" height="36" rx="7" fill="#2f6fed"/>
+  <text x="1398" y="406" font-family="sans-serif" font-size="23" font-weight="700" fill="#171717">62</text>
+  <text x="1445" y="406" font-family="sans-serif" font-size="16" fill="#667085">2위</text>
+
+  <text x="792" y="460" font-family="sans-serif" font-size="16" fill="#667085">가격은 같아졌지만 점수는 3점 뒤졌다</text>
+
+  <!-- 오른쪽 카드 2: 자기 개선 High -->
+  <rect x="760" y="520" width="800" height="170" rx="16" fill="#fdf4e7" stroke="#d79a3c" stroke-width="2"/>
+  <rect x="760" y="520" width="8" height="170" rx="4" fill="#d79a3c"/>
+  <text x="800" y="578" font-family="sans-serif" font-size="28" font-weight="700" fill="#9a6b1e">AI 자기 개선 · High</text>
+  <text x="800" y="614" font-family="sans-serif" font-size="19" fill="#303846">이 등급을 받고 외부에 공개된 첫 모델</text>
+  <text x="800" y="648" font-family="sans-serif" font-size="16" fill="#667085">연구자 모두에게 유능한 연구 엔지니어 1명을 붙인 수준 (2024년 기준 대비)</text>
+</svg>

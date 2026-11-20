@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">자율 그래프 주도 개발 — 노트북을 닫아도 개발은 계속된다</title>
+  <desc id="desc">Upstream, Spec-drive, Dev, Verify, Audit 다섯 개의 노드가 스스로 순환하며 개발을 진행하고, 사람은 질문에 답하거나 승인할 때만 호출되는 구조를 나타낸 표지 이미지.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f7f9fd"/>
+      <stop offset="100%" stop-color="#eef3fb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2f6fed"/>
+      <stop offset="100%" stop-color="#4a9b67"/>
+    </linearGradient>
+    <marker id="ar" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto">
+      <path d="M0,0 L0,6.4 L9.5,3.2 z" fill="#2f6fed"/>
+    </marker>
+    <marker id="arg" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#8b97a8"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g transform="translate(0,34)">
+  <circle cx="1140" cy="440" r="330" fill="#2f6fed" opacity="0.04"/>
+
+  <!-- 왼쪽: 타이틀 -->
+  <rect x="80" y="178" width="340" height="38" rx="19" fill="#eaf1ff"/>
+  <text x="104" y="204" font-family="sans-serif" font-size="18" font-weight="700" fill="#2f6fed" letter-spacing="1">NAVER ENGINEERING DAY 10th</text>
+
+  <text x="80" y="306" font-family="sans-serif" font-size="56" font-weight="700" fill="#171717">노트북을 닫아도</text>
+  <text x="80" y="378" font-family="sans-serif" font-size="56" font-weight="700" fill="#171717">개발은 계속된다</text>
+
+  <rect x="80" y="412" width="92" height="6" rx="3" fill="url(#accent)"/>
+
+  <text x="80" y="474" font-family="sans-serif" font-size="32" font-weight="700" fill="#2f6fed">자율 그래프 주도 개발</text>
+  <text x="80" y="508" font-family="sans-serif" font-size="19" fill="#667085">Autonomous Graph-Driven Development</text>
+
+  <text x="80" y="566" font-family="sans-serif" font-size="21" fill="#303846">사람이 AI를 부르던 구조를 뒤집는다.</text>
+  <text x="80" y="600" font-family="sans-serif" font-size="21" fill="#303846">이제 AI가 필요할 때만 사람을 부른다.</text>
+
+  <!-- 성과 칩 -->
+  <rect x="80" y="646" width="196" height="62" rx="12" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="178" y="676" text-anchor="middle" font-family="sans-serif" font-size="25" font-weight="700" fill="#2f6fed">PR 84%</text>
+  <text x="178" y="698" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">루프가 작성</text>
+
+  <rect x="292" y="646" width="196" height="62" rx="12" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="390" y="676" text-anchor="middle" font-family="sans-serif" font-size="25" font-weight="700" fill="#4a9b67">86% ↓</text>
+  <text x="390" y="698" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">백엔드 공수</text>
+
+  <rect x="504" y="646" width="196" height="62" rx="12" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="602" y="676" text-anchor="middle" font-family="sans-serif" font-size="25" font-weight="700" fill="#4a9b67">71% ↓</text>
+  <text x="602" y="698" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">사람 + AI 비용</text>
+
+  <!-- 오른쪽: 사람 -->
+  <rect x="1000" y="58" width="280" height="66" rx="14" fill="#ffffff" stroke="#8b97a8" stroke-width="2"/>
+  <text x="1140" y="92" text-anchor="middle" font-family="sans-serif" font-size="23" font-weight="700" fill="#303846">사람</text>
+  <text x="1140" y="113" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">질문 답변 · 발의 · PR 승인</text>
+
+  <path d="M1096 192 V132" stroke="#2f6fed" stroke-width="2.5" stroke-dasharray="7 5" fill="none" marker-end="url(#ar)"/>
+  <text x="1082" y="166" text-anchor="end" font-family="sans-serif" font-size="16" fill="#2f6fed">질문</text>
+  <path d="M1184 132 V192" stroke="#8b97a8" stroke-width="2.5" stroke-dasharray="7 5" fill="none" marker-end="url(#arg)"/>
+  <text x="1198" y="166" font-family="sans-serif" font-size="16" fill="#667085">결정</text>
+
+  <!-- 순환 루프 화살표 -->
+  <path d="M1213.5 238 A215 215 0 0 1 1309 308" fill="none" stroke="#2f6fed" stroke-width="3" marker-end="url(#ar)"/>
+  <path d="M1355 447 A215 215 0 0 1 1318 560" fill="none" stroke="#2f6fed" stroke-width="3" marker-end="url(#ar)"/>
+  <path d="M1199 647 A215 215 0 0 1 1081 647" fill="none" stroke="#2f6fed" stroke-width="3" marker-end="url(#ar)"/>
+  <path d="M962 560 A215 215 0 0 1 925 447" fill="none" stroke="#2f6fed" stroke-width="3" marker-end="url(#ar)"/>
+  <path d="M971 308 A215 215 0 0 1 1066 238" fill="none" stroke="#2f6fed" stroke-width="3" marker-end="url(#ar)"/>
+
+  <!-- 노드 5개 -->
+  <rect x="1050" y="197" width="180" height="58" rx="12" fill="#eaf1ff" stroke="#2f6fed" stroke-width="2.5"/>
+  <text x="1140" y="223" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1f4fb5">① Upstream</text>
+  <text x="1140" y="244" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">기획서 → 요구사항</text>
+
+  <rect x="1254" y="345" width="180" height="58" rx="12" fill="#eaf1ff" stroke="#2f6fed" stroke-width="2.5"/>
+  <text x="1344" y="371" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1f4fb5">② Spec-drive</text>
+  <text x="1344" y="392" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">스펙 확정</text>
+
+  <rect x="1176" y="585" width="180" height="58" rx="12" fill="#ecf8f0" stroke="#4a9b67" stroke-width="2.5"/>
+  <text x="1266" y="611" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#2f7a4d">③ Dev</text>
+  <text x="1266" y="632" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">구현 PR → 병합</text>
+
+  <rect x="924" y="585" width="180" height="58" rx="12" fill="#ecf8f0" stroke="#4a9b67" stroke-width="2.5"/>
+  <text x="1014" y="611" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#2f7a4d">④ Verify</text>
+  <text x="1014" y="632" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">E2E 검증</text>
+
+  <rect x="846" y="345" width="180" height="58" rx="12" fill="#fdf4e7" stroke="#d79a3c" stroke-width="2.5"/>
+  <text x="936" y="371" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#9a6b1e">⑤ Audit</text>
+  <text x="936" y="392" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">논리적 결함 탐지</text>
+
+  <!-- 루프 중심 -->
+  <circle cx="1140" cy="440" r="86" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="1140" y="428" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#171717">AI 루프</text>
+  <text x="1140" y="456" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">멱등 · 독립</text>
+  <text x="1140" y="478" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">24시간</text>
+
+  <!-- 야간 배지 -->
+  <rect x="1300" y="712" width="236" height="56" rx="14" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <path d="M1332 730 a15 15 0 1 0 13 20 12 12 0 1 1-13-20z" fill="#2f6fed"/>
+  <text x="1364" y="736" font-family="sans-serif" font-size="17" font-weight="700" fill="#303846">PR 634건 중 54%</text>
+  <text x="1364" y="757" font-family="sans-serif" font-size="15" fill="#667085">야간·주말에 작성</text>
+  </g>
+</svg>

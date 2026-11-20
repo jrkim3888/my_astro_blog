@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Artificial Analysis 지능 지수와 API 가격 비교</title>
+  <desc id="desc">독립 평가 기관 Artificial Analysis의 지능 지수에서 Claude Fable 5.2가 65점으로 1위, GPT-6.2 Astra가 62점으로 2위, Gemini 4 Carbon 60점, Claude Opus 5.5 59점, GPT-6.2 Sol 57점을 기록했다. Fable 5.2와 GPT-6.2 Astra는 입력 8달러, 출력 40달러로 가격이 같다.</desc>
+  <rect width="1200" height="620" fill="#ffffff"/>
+  <style>
+    .h{font:700 24px sans-serif;fill:#171717}
+    .sub{font:17px sans-serif;fill:#667085}
+    .name{font:600 19px sans-serif;fill:#303846}
+    .val{font:700 23px sans-serif;fill:#171717}
+    .price{font:16px sans-serif;fill:#667085}
+    .note{font:16px sans-serif;fill:#667085}
+    .axis{stroke:#e4e8ef;stroke-width:1.5}
+  </style>
+
+  <text x="50" y="44" class="h">Artificial Analysis 지능 지수 v5 (높을수록 좋음)</text>
+  <text x="50" y="72" class="sub">막대 끝의 금액은 100만 토큰당 입력 / 출력 API 가격</text>
+
+  <!-- 격자 -->
+  <line x1="330" y1="100" x2="330" y2="500" class="axis"/>
+  <line x1="470" y1="100" x2="470" y2="500" class="axis"/>
+  <line x1="610" y1="100" x2="610" y2="500" class="axis"/>
+  <line x1="750" y1="100" x2="750" y2="500" class="axis"/>
+  <line x1="890" y1="100" x2="890" y2="500" class="axis"/>
+  <text x="330" y="524" text-anchor="middle" class="price">0</text>
+  <text x="470" y="524" text-anchor="middle" class="price">20</text>
+  <text x="610" y="524" text-anchor="middle" class="price">40</text>
+  <text x="750" y="524" text-anchor="middle" class="price">60</text>
+  <text x="890" y="524" text-anchor="middle" class="price">80</text>
+
+  <!-- Fable 5.2 : 65 -->
+  <text x="310" y="140" text-anchor="end" class="name">Claude Fable 5.2</text>
+  <rect x="330" y="118" width="455" height="34" rx="6" fill="#d79a3c"/>
+  <text x="800" y="141" class="val">65</text>
+  <text x="846" y="141" class="price">$8 / $40</text>
+
+  <!-- GPT-6.2 Astra : 62 -->
+  <text x="310" y="212" text-anchor="end" class="name">GPT-6.2 Astra</text>
+  <rect x="330" y="190" width="434" height="34" rx="6" fill="#2f6fed"/>
+  <text x="779" y="213" class="val">62</text>
+  <text x="825" y="213" class="price">$8 / $40</text>
+
+  <!-- Gemini 4 Carbon : 60 -->
+  <text x="310" y="284" text-anchor="end" class="name">Gemini 4 Carbon</text>
+  <rect x="330" y="262" width="420" height="34" rx="6" fill="#9aa6b6"/>
+  <text x="765" y="285" class="val">60</text>
+
+  <!-- Opus 5.5 : 59 -->
+  <text x="310" y="356" text-anchor="end" class="name">Claude Opus 5.5</text>
+  <rect x="330" y="334" width="413" height="34" rx="6" fill="#c9d1dc"/>
+  <text x="758" y="357" class="val">59</text>
+  <text x="804" y="357" class="price">$4 / $20</text>
+
+  <!-- GPT-6.2 Sol : 57 -->
+  <text x="310" y="428" text-anchor="end" class="name">GPT-6.2 Sol</text>
+  <rect x="330" y="406" width="399" height="34" rx="6" fill="#7aa6f5"/>
+  <text x="744" y="429" class="val">57</text>
+  <text x="790" y="429" class="price">$2 / $10</text>
+
+  <line x1="330" y1="500" x2="950" y2="500" stroke="#8b97a8" stroke-width="2"/>
+
+  <text x="50" y="566" class="note">가격을 20% 내린 GPT-6.2 Astra는 Fable 5.2와 토큰 단가가 같아졌지만, 지능 지수에서는 3점 뒤진 2위다.</text>
+  <text x="50" y="594" class="note">OpenAI가 자사 벤치마크에서 내세운 우위와 독립 평가 결과가 갈리는 지점이다.</text>
+</svg>

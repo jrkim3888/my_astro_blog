@@ -1,0 +1,207 @@
+---
+title: "클로드가 리만 가설을 증명했다 - 기계는 통과시켰지만 사람은 아직 못 읽는다"
+description: "앤트로픽 소속 수학자 레벤트 알포게가 클로드와 함께 찾은 리만 가설 증명이 Lean으로 공개되고 기계 검증을 통과했습니다. 1,700만 줄 증명의 검증 내역과, 아직 '해결'로 부르기 어려운 이유를 1차 자료 기준으로 정리했습니다."
+pubDate: 2026-11-24
+heroImage: "/images/blog/2026-11-24-riemann-hypothesis-ai-proof_hero.webp"
+category: "LLM"
+tags: ["AI", "Claude", "Anthropic", "수학", "리만가설", "Lean", "형식검증"]
+draft: false
+---
+
+2026년 11월 20일, 앤트로픽 소속 수학자 **레벤트 알포게(Levent Alpöge)** 가 자신의 웹사이트에 네 쪽짜리 노트를 올렸습니다.
+
+> "I believe I have, working with Claude, discovered a proof of the Riemann Hypothesis."
+> (클로드와 함께 리만 가설의 증명을 발견했다고 믿습니다.)
+
+하루 뒤인 11월 21일, **Lean FRO와 Mathlib Initiative가 공동 성명**을 내고 이 증명이 옳다고 인증했습니다.
+
+그런데 이 이야기에는 반전이 있습니다. **증명은 1,700만 줄짜리 코드이고, 아직 아무도 그 내용을 이해하지 못했습니다.**
+
+<br/>
+
+## 리만 가설이 뭔가
+
+1859년 베른하르트 리만이 제시한 가설입니다. **리만 제타 함수 ζ(s)의 모든 "자명하지 않은" 영점이 하나의 수직선 위에 놓여 있다**는 주장입니다.
+
+중요한 이유는 **소수(prime number)의 분포**와 직결되기 때문입니다. 제타 함수는 특정 수보다 작은 소수가 몇 개인지를 추정하는 데 쓰이는데, 리만 가설이 참이라면 그 추정의 오차 범위가 결정됩니다.
+
+- 1900년 다비트 힐베르트가 **23개 문제**에 포함
+- 2000년 클레이 수학연구소가 **100만 달러 상금이 걸린 7개 문제** 중 하나로 선정
+- 100개가 넘는 동치 명제가 알려져 있고, **12조 개가 넘는 영점**이 실제로 그 선 위에 있음이 확인됨
+
+167년 동안 아무도 증명하지 못했습니다. 알포게는 네 쪽 노트에서 이 문제를 **"어린 시절부터 나에게 수학의 신성한 대상"** 이라고 표현했습니다.
+
+<br/>
+
+## 무슨 일이 있었나
+
+| 날짜 | 사건 |
+|---|---|
+| **11월 20일** | 알포게가 4쪽 노트 공개. Lean 4 형식 증명 아카이브 **175,187개 파일 · 약 1,700만 줄** 동시 공개 |
+| 11월 20일 | 같은 날, AI 없이 쓴 **940쪽 사람 증명**도 별도로 공개 (후술) |
+| 11월 20일 | 테렌스 타오가 블로그에서 언급 |
+| **11월 21일** | **Lean FRO · Mathlib Initiative 공동 성명** — 증명이 옳다고 인증 |
+| 11월 21일 | 마이클 루빈스타인(워털루대)의 독립 검증 완료 |
+| 11월 22일 | 사람이 읽을 수 있는 해설 초안 v2(265쪽) 공개 |
+
+알포게는 리만 가설뿐 아니라 **디리클레 L-함수에 대한 일반화 리만 가설(GRH)** 까지 증명했다고 밝혔습니다.
+
+<br/>
+
+## Lean 커뮤니티의 공식 인증
+
+가장 중요한 1차 자료입니다.
+
+![Lean FRO와 Mathlib Initiative 공동 성명](/images/blog/2026-11-24-riemann-hypothesis-ai-proof_lean.webp)
+
+*이미지 출처: [Lean community blog](https://leanprover-community.github.io/blog/posts/riemann-hypothesis/)*
+
+> **"We have full confidence that Alpöge's proof of the Riemann Hypothesis is correct, and we congratulate him on this achievement."**
+> (알포게의 리만 가설 증명이 옳다고 전적으로 확신하며, 이 성취를 축하합니다.)
+
+성명은 네 가지 기준을 모두 충족했다고 밝혔습니다.
+
+1. **명제가 옳다** — Mathlib에 이미 들어 있는 `RiemannHypothesis` 선언을 썼고, Lean과 정수론 전문가들이 검증한 것
+2. **라이브러리가 정상 컴파일된다** — **수십 명**이 컴파일에 성공했고 **동일한 원시 증명 파일을 재현**
+3. **코드가 그 명제를 증명한다** — 커뮤니티가 리만 가설 명제만 따로 떼어낸 파일을 만들어, `comparator`와 `con-leche --compare` 두 도구로 대조. 둘 다 **"알포게의 라이브러리가 증명한 정리가 정확히 Mathlib의 리만 가설 명제"** 임을 확인
+4. **Lean 증명이 유효하다** — Lean 공식 커널, `con-leche`, `con-ron`, 그리고 **서로 다른 언어로 구현된 제3자 독립 검사기들**이 검사
+
+특히 꼼꼼한 대목이 있습니다. `con-leche`와 `con-ron`은 **집합론에 상대적으로 "거짓 증명을 받아들일 수 없다"는 형식 증명을 갖춘 검사기**입니다. Lean 자체 논리에 결함이 있어 증명이 그걸 악용했을 가능성까지 차단한 것입니다. 검사는 **소스가 아니라 비활성 export 파일**에 대해 수행해, 혹시 모를 악성 코드가 개입할 여지도 없앴습니다.
+
+<br/>
+
+## 독립 검증은 얼마나 꼼꼼했나
+
+워털루대 **마이클 루빈스타인**의 검증 페이지가 가장 구체적입니다.
+
+![마이클 루빈스타인의 독립 검증 결과](/images/blog/2026-11-24-riemann-hypothesis-ai-proof_verification.webp)
+
+*이미지 출처: [GRH Lean Check — Michael Rubinstein](https://mrubinst.github.io/grh-lean-verification/)*
+
+| 검사 항목 | 결과 |
+|---|---|
+| 소스가 저자 배포본과 일치하는가 | 14개 파트를 **두 대의 머신에서 두 번** 받아 SHA-256 대조. 조립된 `lean.tar.gz`는 239,275,554 바이트 |
+| 정리 명제가 제대로 쓰였는가 | 손으로 읽어 확인. RH는 Mathlib 자체 `RiemannHypothesis`, GRH 명제는 Mathlib만 import하는 16줄 파일 |
+| 의존성이 진짜 공식 릴리스인가 | Lean **v4.33.1**(2026-08-21 공식 릴리스), Mathlib은 특정 커밋에 고정 |
+| 미증명 가정·커널 우회가 있는가 | 175,187개 파일에서 `axiom`, `sorry`, `admit`, `native_decide`, `implemented_by`, `extern`, `unsafe`, `opaque` **전부 없음** |
+| 공리 확인 | `#print axioms` 결과 5개 주요 정리 모두 **Lean 표준 공리 3개에만** 의존 |
+| 커널 재생 | 175,187개 모듈 전부 Lean 커널 통과, **거부 0건** |
+| 독립 커널 | Rust로 작성된 **nanoda**가 5개 정리가 의존하는 **1,484,729개 선언**을 검사, 타입 오류 0건 |
+
+**"All four checks finished with no errors."** 네 가지 검사 모두 오류 없이 끝났습니다.
+
+형식 검증에서 가장 흔한 함정이 `sorry`(증명 생략)나 `native_decide`(커널 우회)를 섞어 넣는 것인데, 그런 흔적이 하나도 없었다는 점이 핵심입니다. 안드레 서덜랜드(MIT), 엘리엇 알레지, 바르토시 나스크렝츠키 등도 각자 독립 검증을 수행했습니다.
+
+<br/>
+
+## 그런데 사람은 아직 못 읽는다
+
+여기가 이 사건의 진짜 쟁점입니다.
+
+알포게는 **자연어 증명을 내놓지 않았습니다.** 그 이유를 이렇게 밝혔습니다. 논증이 너무 길어서, AI로 영어 설명을 만들어봤더니 **25만 쪽이 넘었다**는 것입니다. 그런 걸 올리는 건 "명백히 부적절"하며 **"읽을 수 없는 거대한 슬롭(slop) 덩어리"** 가 될 뿐이라고 했습니다.
+
+수학자 **대니얼 리트(Daniel Litt)** 의 평가가 이 상황을 압축합니다.
+
+> **"exceedingly likely to be correct" … "No human understands it yet."**
+> (지극히 옳을 가능성이 높다… 그러나 아직 아무도 이해하지 못한다.)
+
+### 해설 초안은 13개 미증명 가설에 의존한다
+
+루빈스타인이 사람이 읽을 수 있는 해설을 쓰고 있습니다(**265쪽, 11월 22일 작업 초안 v2**, 클로드·Codex·제미나이를 보조로 써서 작성). 그런데 이 해설의 현재 상태를 그는 솔직하게 적어뒀습니다.
+
+핵심은 **(M)** 이라는 부등식입니다. 소수 거듭제곱에 대한 가중합의 상계인데, 여기서 리만 가설이 따라 나옵니다. 문제는 이것입니다.
+
+> **"(M) itself is not proved there: the paper reduces it, and with it the Riemann hypothesis, to thirteen numbered hypotheses"**
+> ((M) 자체는 거기서 증명되지 않는다. 이 논문은 (M)을, 그리고 그와 함께 리만 가설을, 번호 매긴 13개 가설로 환원할 뿐이다.)
+
+즉 **기계는 전체를 검증했지만, 사람이 따라 읽을 수 있는 설명은 아직 13개 구멍이 뚫린 상태**입니다. 그는 "It is a work in progress"라고 명시했고, 남은 작업 목록을 따로 절로 만들어뒀습니다.
+
+![검증 현황 대시보드](/images/blog/2026-11-24-riemann-hypothesis-ai-proof_dashboard.webp)
+
+*이미지 출처: [riemann-rev — Bartosz Naskręcki](https://nasqret.github.io/riemann-rev/)*
+
+검증 현황을 정리한 대시보드도 같은 선을 긋습니다. **"It is not a proof, not a referee report and not an endorsement"** — 증명도, 심사 보고서도, 보증도 아니라는 것입니다. 상단에는 **"the mathematics has not yet been refereed"**(수학적 내용은 아직 심사되지 않았다)라고 적혀 있습니다.
+
+<br/>
+
+## 테렌스 타오의 반응
+
+필즈상 수상자 **테렌스 타오**는 11월 20일 블로그에 이 소식을 적었습니다. 다만 그가 실제로 쓴 내용은 언론 보도보다 훨씬 조심스럽습니다.
+
+그는 이 건을 **"소화된(digested) 정도의 역순"** 으로 나열한 세 가지 소식 중 **가장 덜 소화된 마지막 항목**에 두었습니다. 증명의 정확성에 대해서는 **직접 판단하지 않고**, Lean Zulip 스레드를 "검증 노력을 따라가기 가장 좋은 곳"으로 안내했습니다.
+
+> **"I imagine the digestion process will take some time, though in this case at least we have a human author to communicate with to assist with this task."**
+> (소화 과정에는 시간이 걸릴 것이다. 다만 이번에는 적어도 소통할 수 있는 사람 저자가 있다.)
+
+초기 분석으로는 이 증명이 **"랭글랜즈 프로그램과 산술기하학의 현대적 성과를 총동원한 것으로 보인다"** 고 적었습니다. 어디까지나 예비 인상이라고 단서를 달았습니다.
+
+> **참고**: 일부 보도에서 "타오가 한 달 전 AI가 2050년에나 리만 가설을 풀 것이라 했다"거나 "AI는 손도 못 댄다고 했다"는 인용이 돌고 있습니다. **그의 블로그에서는 그런 발언을 확인하지 못했습니다.** 확인되지 않은 인용으로 보고 거르는 편이 안전합니다.
+
+<br/>
+
+## 같은 날, 사람이 쓴 940쪽 증명도 나왔다
+
+묘하게도 같은 날 또 다른 주장이 나왔습니다. 미국수학회(AMS) 회장 **라비 바킬**이 블로그에 스탠퍼드의 **알레산드로 마리아 마술로**가 쓴 **940쪽 원고 「The Music of the Primes」** 를 공개했습니다. 역시 일반화 리만 가설에 대한 증명 주장이고, 바킬은 **"all human, with no AI"**(전부 사람이 했고 AI는 없다)라고 소개했습니다.
+
+그런데 공개 **몇 시간 만에 여러 사람이 문제점을 보고**했습니다. 바킬은 8시간쯤 뒤 글을 갱신해 이를 알렸습니다. 수정 가능한 문제인지는 아직 알 수 없습니다.
+
+**AI가 만든 증명은 기계 검증을 통과했고, 사람이 쓴 증명에서는 몇 시간 만에 오류가 나왔다.** 같은 날 벌어진 일입니다.
+
+<br/>
+
+## 왜 아직 "해결"이 아닌가
+
+Lean 커뮤니티가 인증했는데도 조심스러운 표현이 계속 붙는 이유가 있습니다.
+
+1. **형식 검증 ≠ 수학계의 인정.** 형식화 자체에 문제가 있을 수 있다는 것이 수학계의 일반적 입장입니다. 다만 이번 건은 명제가 Mathlib의 기존 선언이고 독립 도구로 대조까지 마쳐, 그 우려의 상당 부분은 해소됐습니다
+2. **동료 심사를 거치지 않았습니다.** 학술지에 제출된 논문이 아니라 개인 웹사이트의 4쪽 노트와 코드 아카이브입니다
+3. **클레이 수학연구소 기준이 따로 있습니다.** 적격 학술지 게재 후 **최소 2년**이 지나야 하고, 수학계의 폭넓은 인정도 필요합니다. 연구소는 여전히 이 문제를 미해결로 분류하고 있습니다
+4. **아직 아무도 내용을 이해하지 못했습니다.** 이것이 수학에서 갖는 의미는 간단치 않습니다. 수학은 "참임을 아는 것"만이 아니라 "왜 참인지 이해하는 것"을 목표로 해온 분야이기 때문입니다
+
+<br/>
+
+## 개발자 입장에서 눈여겨볼 지점
+
+### 1. 검증 가능한 형태로 내놓았다는 점
+
+모나시대 멜리사 리는 이번 공개 방식을 **AI 지원 결과를 발표하는 좋은 선례**로 평가했습니다. 읽을 수도 검증할 수도 없는 AI 생성 원고를 쏟아내는 대신, **기계가 검사할 수 있는 형태**로 내놓고, 작업 과정과 타임라인을 밝히고, 도움받은 연구자들을 인용했다는 것입니다.
+
+이건 코드에도 그대로 적용되는 원칙입니다. AI가 만든 결과물을 **검증 가능한 형태로 내놓느냐**가 신뢰의 출발점이 됩니다. [자율 그래프 주도 개발 포스팅](/blog/naver-autonomous-graph-driven-development)에서 정리한 "AI 루프가 쓰고 결정론적 코드가 기계적으로 검사한다"는 구조와 같은 발상입니다.
+
+### 2. 형식 검증의 가치가 재확인됐다
+
+`sorry` 하나 없이 175,187개 파일이 커널을 통과했고, 독립 구현 커널이 148만 개 선언을 재검사했습니다. **"믿어달라"가 아니라 "직접 돌려보라"** 가 가능했기에 하루 만에 인증이 나올 수 있었습니다.
+
+### 3. 이해의 공백은 남는다
+
+수치 검증이 끝나도 **"왜 그런가"는 여전히 사람의 몫**입니다. 265쪽 해설이 아직 13개 가설에 의존한다는 사실이 그 간극의 크기를 보여줍니다.
+
+<br/>
+
+## 정리
+
+1. **무슨 일**: 11월 20일 앤트로픽 소속 수학자 알포게가 클로드와 함께 찾은 리만 가설·일반화 리만 가설 증명을 Lean으로 공개
+2. **규모**: 175,187개 파일, 약 1,700만 줄, 압축본 약 239MB
+3. **인증**: 11월 21일 Lean FRO·Mathlib Initiative 공동 성명 — **"증명이 옳다고 전적으로 확신"**
+4. **검증 강도**: `sorry`·`native_decide` 등 우회 수단 전무, 표준 공리 3개에만 의존, 독립 Rust 커널이 148만 선언 재검사, 수십 명이 동일 export 재현
+5. **공백**: 자연어 증명 없음(AI 설명 시도는 25만 쪽). 265쪽 해설 초안은 아직 **13개 미증명 가설에 의존**
+6. **타오**: 정확성 판단은 보류, "소화에는 시간이 걸릴 것"
+7. **상태**: 동료 심사 전이며 클레이 연구소 기준으로는 여전히 미해결
+
+**"기계는 맞다고 하는데 사람은 왜 맞는지 모른다."** 167년 된 문제 앞에서 수학이 처음 마주한 상황이고, AI와 일하는 모든 분야가 머지않아 각자의 버전으로 겪게 될 문제이기도 합니다.
+
+<br/>
+
+## 참고 자료
+
+이 글은 2026년 11월 24일 기준 공개 자료를 바탕으로 작성했습니다. 검증 수치와 인용은 Lean 커뮤니티 공동 성명, 루빈스타인의 검증 페이지, 타오의 블로그 원문을 직접 확인한 것입니다.
+
+- [Lean community blog — Lean verification of the Riemann Hypothesis](https://leanprover-community.github.io/blog/posts/riemann-hypothesis/) (Lean FRO·Mathlib Initiative 공동 성명)
+- [Michael Rubinstein — Alpöge/Claude proof 해설 및 검증](https://www.math.uwaterloo.ca/~mrubinst/alpoge_claude_grh/)
+- [GRH Lean Check — 독립 검증 상세](https://mrubinst.github.io/grh-lean-verification/)
+- [riemann-rev — 검증 현황 대시보드 (Bartosz Naskręcki)](https://nasqret.github.io/riemann-rev/)
+- [Terence Tao 블로그 (2026-11-20)](https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/)
+- [The Conversation — 'The sacred object in mathematics' (Melissa Lee, Monash University)](https://theconversation.com/the-sacred-object-in-mathematics-the-riemann-hypothesis-ai-and-a-proof-no-human-can-read-297276)
+- [알포게의 원본 노트 (alpo.ge/remark.pdf)](https://alpo.ge/remark.pdf)
+
+상황이 빠르게 전개되고 있어, 수학계의 최종 평가는 앞으로 상당 기간에 걸쳐 나올 것입니다.

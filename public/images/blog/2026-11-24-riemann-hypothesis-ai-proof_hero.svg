@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">클로드가 리만 가설을 증명했다 — 기계는 통과시켰지만 사람은 아직 못 읽는다</title>
+  <desc id="desc">레벤트 알포게와 Claude가 함께 만든 Lean 4 형식 증명이 기계 검증은 통과했지만 사람이 읽을 수 있는 증명은 아직 미완성이라는 대비를 담은 표지 이미지. 왼쪽에 제목, 가운데에 임계선 위의 영점 모티프, 오른쪽에 기계 검증 통과 항목과 사람은 아직 못 읽는 이유가 나란히 놓여 있다.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="58%" stop-color="#f7f9fd"/>
+      <stop offset="100%" stop-color="#eef2fb"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1210" cy="452" r="360" fill="#2f6fed" opacity="0.035"/>
+  <circle cx="190" cy="760" r="210" fill="#4a9b67" opacity="0.03"/>
+
+  <!-- ===== 왼쪽: 타이틀 ===== -->
+  <rect x="90" y="222" width="432" height="40" rx="20" fill="#eaf1ff"/>
+  <text x="114" y="249" font-family="sans-serif" font-size="17" font-weight="700" fill="#2f6fed" letter-spacing="1.2">RIEMANN HYPOTHESIS · 2026.11.20</text>
+
+  <text x="90" y="366" font-family="sans-serif" font-size="56" font-weight="800" fill="#141a24">클로드가 리만 가설을</text>
+  <text x="90" y="438" font-family="sans-serif" font-size="56" font-weight="800" fill="#141a24">증명했다</text>
+
+  <rect x="90" y="476" width="92" height="6" rx="3" fill="#2f6fed"/>
+
+  <text x="90" y="540" font-family="sans-serif" font-size="25" font-weight="600" fill="#3c4756">다만, 아직 아무도 그 증명을 읽지 못했다</text>
+
+  <text x="90" y="596" font-family="sans-serif" font-size="19" fill="#667085">Levent Alpöge × Claude · Lean 4 / Mathlib 형식 증명</text>
+  <text x="90" y="652" font-family="sans-serif" font-size="17" fill="#8b97a8">클레이 밀레니엄 문제 기준으로는 여전히 ‘미해결’</text>
+
+  <!-- ===== 가운데: 임계선 위의 영점 ===== -->
+  <line x1="745" y1="168" x2="745" y2="736" stroke="#c3d4f5" stroke-width="2.5" stroke-dasharray="7 7"/>
+  <circle cx="745" cy="214" r="7" fill="#2f6fed" opacity="0.55"/>
+  <circle cx="745" cy="268" r="7" fill="#2f6fed" opacity="0.75"/>
+  <circle cx="745" cy="331" r="7" fill="#2f6fed" opacity="0.95"/>
+  <circle cx="745" cy="374" r="7" fill="#2f6fed" opacity="0.6"/>
+  <circle cx="745" cy="441" r="7" fill="#2f6fed" opacity="0.9"/>
+  <circle cx="745" cy="496" r="7" fill="#2f6fed" opacity="0.7"/>
+  <circle cx="745" cy="549" r="7" fill="#2f6fed" opacity="0.95"/>
+  <circle cx="745" cy="613" r="7" fill="#2f6fed" opacity="0.6"/>
+  <circle cx="745" cy="668" r="7" fill="#2f6fed" opacity="0.8"/>
+  <circle cx="745" cy="714" r="7" fill="#2f6fed" opacity="0.5"/>
+  <text x="745" y="786" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#8b97a8">모든 비자명 영점은 Re(s) = ½ 위에 있다</text>
+
+  <!-- ===== 오른쪽 위: 기계 검증 통과 ===== -->
+  <rect x="830" y="185" width="690" height="250" rx="18" fill="#f0f9f3" stroke="#bfe0cc" stroke-width="2"/>
+  <circle cx="878" cy="234" r="18" fill="#3f8a5c"/>
+  <path d="M870,234 L876,241 L887,228" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="910" y="243" font-family="sans-serif" font-size="29" font-weight="700" fill="#2f6b46">기계 검증은 통과했다</text>
+  <text x="878" y="305" font-family="sans-serif" font-size="21" fill="#3d5c4a">175,187개 파일 · 약 1,700만 줄 Lean 증명</text>
+  <text x="878" y="345" font-family="sans-serif" font-size="21" fill="#3d5c4a">sorry · native_decide · unsafe 우회 0건</text>
+  <text x="878" y="385" font-family="sans-serif" font-size="21" fill="#3d5c4a">독립 커널이 1,484,729개 선언을 재검사</text>
+
+  <!-- ===== 오른쪽 아래: 사람은 아직 ===== -->
+  <rect x="830" y="470" width="690" height="250" rx="18" fill="#fdf6ec" stroke="#ebd8b3" stroke-width="2"/>
+  <circle cx="878" cy="519" r="18" fill="#c08a2e"/>
+  <text x="878" y="528" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="800" fill="#ffffff">?</text>
+  <text x="910" y="528" font-family="sans-serif" font-size="29" font-weight="700" fill="#8a5a12">사람은 아직 못 읽는다</text>
+  <text x="878" y="590" font-family="sans-serif" font-size="21" fill="#6b5222">사람이 읽을 자연어 증명은 아직 없음</text>
+  <text x="878" y="630" font-family="sans-serif" font-size="21" fill="#6b5222">AI가 쓴 설명은 25만 쪽을 넘김</text>
+  <text x="878" y="670" font-family="sans-serif" font-size="21" fill="#6b5222">265쪽 해설은 13개 미증명 가설에 의존</text>
+</svg>

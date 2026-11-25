@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">GLM-5.4 루프 트랜스포머 구조</title>
+  <desc id="desc">GLM-5.4는 전체 78개 층 가운데 L27에서 L54까지 28개 층을 같은 가중치로 두 번 통과시킨다. 입력 임베딩과 Prelude 26개 층을 지나 Loop Pass 1과 Loop Pass 2를 거친 뒤 Coda 24개 층과 LM Head로 이어진다. 두 번째 통과를 감당하기 위해 게이트형 점진 갱신, 하이브리드 KV 캐시, 희소 인덱스 재사용 세 가지 장치를 두었다.</desc>
+
+  <defs>
+    <marker id="ar" markerWidth="11" markerHeight="11" refX="8.5" refY="3.2" orient="auto">
+      <path d="M0,0 L0,6.4 L9.5,3.2 z" fill="#8b97a8"/>
+    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f5f8fd"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+
+  <text x="90" y="72" font-family="sans-serif" font-size="34" font-weight="800" fill="#141a24">GLM-5.4 루프 트랜스포머 — 78개 층 중 28개를 두 번 지난다</text>
+  <text x="90" y="112" font-family="sans-serif" font-size="20" fill="#667085">층을 더 쌓는 대신 같은 층을 다시 통과시켜, 파라미터를 늘리지 않고 연산 깊이만 늘린다</text>
+
+  <!-- 가중치 공유 브래킷 -->
+  <path d="M522,224 L522,206 L1058,206 L1058,224" fill="none" stroke="#2f6fed" stroke-width="2.5"/>
+  <rect x="628" y="158" width="324" height="36" rx="18" fill="#eaf1ff"/>
+  <text x="790" y="183" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#2f6fed">같은 28개 층 · 가중치 공유 · 파라미터 증가 0</text>
+
+  <!-- 블록들 -->
+  <rect x="90" y="250" width="130" height="170" rx="14" fill="#f3f5f9" stroke="#d6dce6" stroke-width="2"/>
+  <text x="155" y="298" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#303846">입력</text>
+  <text x="155" y="330" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">텍스트 임베딩</text>
+  <text x="155" y="356" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">+ ViT 24개 층</text>
+  <text x="155" y="382" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">이미지 특징</text>
+
+  <rect x="256" y="250" width="230" height="170" rx="14" fill="#f3f5f9" stroke="#d6dce6" stroke-width="2"/>
+  <text x="371" y="302" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#303846">Prelude</text>
+  <text x="371" y="336" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">L1 – 26 · 26개 층</text>
+  <text x="371" y="370" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">한 번만 지난다</text>
+
+  <rect x="522" y="250" width="250" height="170" rx="14" fill="#eaf1ff" stroke="#2f6fed" stroke-width="2.5"/>
+  <text x="647" y="292" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1f4fb5">Loop Pass 1</text>
+  <text x="647" y="322" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#3c4756">L27 – 54 · 28개 층</text>
+  <text x="647" y="356" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="600" fill="#2f6fed">x₁ = x₀ + β₁(h₁ − x₀)</text>
+  <text x="647" y="388" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">희소 KV 선택 · 인덱싱 수행</text>
+
+  <rect x="808" y="250" width="250" height="170" rx="14" fill="#eaf1ff" stroke="#2f6fed" stroke-width="2.5"/>
+  <text x="933" y="292" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#1f4fb5">Loop Pass 2</text>
+  <text x="933" y="322" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#3c4756">L27 – 54 · 같은 가중치</text>
+  <text x="933" y="356" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="600" fill="#2f6fed">x₂ = x₁ + β₂(h₂ − x₁)</text>
+  <text x="933" y="388" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#667085">1패스 KV · 인덱스 재사용</text>
+
+  <rect x="1094" y="250" width="230" height="170" rx="14" fill="#f3f5f9" stroke="#d6dce6" stroke-width="2"/>
+  <text x="1209" y="302" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#303846">Coda</text>
+  <text x="1209" y="336" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">L55 – 78 · 24개 층</text>
+  <text x="1209" y="370" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">한 번만 지난다</text>
+
+  <rect x="1360" y="250" width="150" height="170" rx="14" fill="#2b3444" stroke="#2b3444" stroke-width="2"/>
+  <text x="1435" y="316" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#ffffff">LM Head</text>
+  <text x="1435" y="348" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#c9d1dc">출력</text>
+
+  <!-- 화살표 -->
+  <line x1="224" y1="335" x2="248" y2="335" stroke="#8b97a8" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="490" y1="335" x2="514" y2="335" stroke="#8b97a8" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="776" y1="335" x2="800" y2="335" stroke="#2f6fed" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="1062" y1="335" x2="1086" y2="335" stroke="#8b97a8" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="1328" y1="335" x2="1352" y2="335" stroke="#8b97a8" stroke-width="2.5" marker-end="url(#ar)"/>
+
+  <!-- 게이트 설명 -->
+  <text x="647" y="458" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#2f6fed">1패스 · 게이트를 작게</text>
+  <text x="647" y="484" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">전역 맥락을 잡고 조심스럽게 기록</text>
+  <text x="933" y="458" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#2f6fed">2패스 · 게이트를 열어</text>
+  <text x="933" y="484" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#667085">그 상태를 받아 전면 갱신</text>
+
+  <!-- 하단 카드 3개 -->
+  <rect x="90" y="560" width="450" height="236" rx="16" fill="#ffffff" stroke="#e1e7f0" stroke-width="2"/>
+  <text x="122" y="608" font-family="sans-serif" font-size="19" font-weight="700" fill="#1f4fb5">① 게이트형 점진 갱신</text>
+  <text x="122" y="652" font-family="sans-serif" font-size="16" fill="#4a5568">은닉 상태를 그냥 덮어쓰면 반복할수록</text>
+  <text x="122" y="684" font-family="sans-serif" font-size="16" fill="#4a5568">활성값이 폭주한다. 토큰마다 따로 둔</text>
+  <text x="122" y="716" font-family="sans-serif" font-size="16" fill="#4a5568">게이트로 잔차에 비례해서만 기록하고,</text>
+  <text x="122" y="748" font-family="sans-serif" font-size="16" fill="#4a5568">어려운 토큰일수록 더 크게 연다.</text>
+
+  <rect x="575" y="560" width="450" height="236" rx="16" fill="#ffffff" stroke="#e1e7f0" stroke-width="2"/>
+  <text x="607" y="608" font-family="sans-serif" font-size="19" font-weight="700" fill="#1f4fb5">② 하이브리드 KV 캐시</text>
+  <text x="607" y="652" font-family="sans-serif" font-size="16" fill="#4a5568">루프마다 전체 KV를 따로 들면 메모리가</text>
+  <text x="607" y="684" font-family="sans-serif" font-size="16" fill="#4a5568">루프 수만큼 불어난다. 2패스는 1패스가</text>
+  <text x="607" y="716" font-family="sans-serif" font-size="16" fill="#4a5568">고른 희소 KV를 공유하고, 자기 슬라이딩</text>
+  <text x="607" y="748" font-family="sans-serif" font-size="16" fill="#4a5568">윈도우 하나만 더 가진다.</text>
+
+  <rect x="1060" y="560" width="450" height="236" rx="16" fill="#ffffff" stroke="#e1e7f0" stroke-width="2"/>
+  <text x="1092" y="608" font-family="sans-serif" font-size="19" font-weight="700" fill="#1f4fb5">③ 희소 인덱스 재사용</text>
+  <text x="1092" y="652" font-family="sans-serif" font-size="16" fill="#4a5568">GLM-5.4의 베이스는 희소 어텐션을 쓴다.</text>
+  <text x="1092" y="684" font-family="sans-serif" font-size="16" fill="#4a5568">2패스는 1패스 인덱서가 고른 위치를</text>
+  <text x="1092" y="716" font-family="sans-serif" font-size="16" fill="#4a5568">그대로 받아 써서 인덱싱 비용이 0이고,</text>
+  <text x="1092" y="748" font-family="sans-serif" font-size="16" fill="#4a5568">매번 다시 계산한 경우와 성능이 비슷했다.</text>
+
+  <text x="90" y="852" font-family="sans-serif" font-size="15" fill="#8b97a8">출처: Z.ai, “GLM-5.4: Toward Generalized Coding with Our First Loop Transformer” (2026.11.23) 공식 구조도와 본문을 바탕으로 재구성</text>
+</svg>
